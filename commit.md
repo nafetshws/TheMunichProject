@@ -24,3 +24,19 @@ git commit -m "Hier die Veränderungen reinschreiben, die mit der neuen Version 
 ``` shell
 git push origin master
 ```
+
+## Branches (Äste)
+Branches sind unabhängige Entwicklungslinien. Es gibt quasi einen Stamm, der die Hauptversion darstellt (Diese sollte immer funktionieren). Diesen branch nennt man auch "master". Wenn man ein neues experimentelles feature hinzufügen möchte, aber nicht will, dass dieses in der Hauptversion auftaucht, da das feature experimentell ist und nicht zwingend fehlerfrei ist, kann man einen neuen branch anlegen. Dieser branch ist ein exaktes Duplikat vom master branch, mit dem Unterschied, dass man diesen beliebig verändern und auch wieder hochladen kann, ohne den master branch zu beeinflussen. Wenn man dann feststellt, dass das feature bugfrei funktioniert, kann man die zwei branches mergen (zusammenführen).
+``` shell
+# Listet alle branches auf und zeigt an, in welchem man sich befindet
+git branch --list
+# Erstellt einen neuen branch (und wechselt in ihn)
+git checkout -b neuerBranch
+# Wechselt zwischen branches
+git checkout master
+# Zusammenführen von einem branch mit dem master branch
+git checkout master
+git merge neuerBranch
+# Löschen eines branches
+git branch -d neuerBranch
+```
