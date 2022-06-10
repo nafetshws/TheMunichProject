@@ -1,22 +1,23 @@
 package ui;
 
 import javax.swing.*;
+
+import game.GamePanel;
+
 import java.awt.*;
 
 public class MainWindow {
     public static void main(String[] args) {
 
-        JFrame frame = new JFrame("Hello World Java Swing");
-
+        JFrame frame = new JFrame("Game");
+        GamePanel gamePanel = new GamePanel();
         // set frame site
         frame.setMinimumSize(new Dimension(800, 600));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // center the JLabel
-        JLabel lblText = new JLabel("Hello World!", SwingConstants.CENTER);
-
-        // add JLabel to JFrame
-        frame.getContentPane().add(lblText);
+        frame.setResizable(false);
+        
+        frame.add(gamePanel);
+        gamePanel.startGameThread();
 
         // display it
         frame.pack();
