@@ -16,11 +16,15 @@ public class GamePanel extends JPanel implements Runnable {
 	int screenWith=1920;
 	int screenHeight=1080;
 	
-	int xPos=100;
-	int yPos=100;
+	int xPos=500;
+	int yPos=700;
 	int speed=4;
-	//Bildrate pro Sekunde in Millisekunden
+	//FPS (genauer gesagt die Zeit in Millisekunden, die das Programm wartet bevor es einen neuen Durchlauf startet)
 	int fPS=16; 
+	int jumpVelocity=-30;
+	int g=1;
+	//benutze ich als Zeitzählung
+	int count=0;
 	
 		//Thread ist die Zeit
 	Thread gameThread;
@@ -53,8 +57,8 @@ public class GamePanel extends JPanel implements Runnable {
 	public void run() {
 		
 		while(gameThread != null) {
-		System.out.println("The System is running");
 		
+		count++;
 		// updated Spielinformationen;
 		update();
 		// setzt die neuen Spielinformationen graphisch um
@@ -73,13 +77,31 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public void update() {
 		//bewegt die Spieler
+		
+		
 		if(keyH.right==true) {
 			xPos=xPos+speed;
 		}
 		if(keyH.left==true) {
-			xPos=xPos-speed;
+			xPos=xPos-speed;		
+		}
+		
+			// y=0.5*g*t*t+v*t+y
+		yPos=(int) (0.5*g*count*count+jumpVelocity*count+700);
+		if(700<yPos) {
+			yPos=700;
+					
+		}
+		
+		if(keyH.up==true) {
+			//startet die Zeitzählung für den Sprung
+			//startet nur, wenn sich das objekt auf dem Boden befindet
+			if(yPos==700) {
+				count=0;
+			}
 			
 		}
+		
 	}
 	public void paintComponent(Graphics g) {
 		// Methode repaint (Warum die jetzt anders heißt, weiß ich auch nicht)
