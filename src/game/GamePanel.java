@@ -29,9 +29,6 @@ public class GamePanel extends JPanel implements Runnable {
 	private Thread gameThread;
 	// verwaltet die Tastenangabe
 	private KeyHandler keyHandler = new KeyHandler();
-
-	
-	
 	
 	
 	public GamePanel() {
@@ -45,7 +42,6 @@ public class GamePanel extends JPanel implements Runnable {
 		 
 		this.addKeyListener(keyHandler);
 		this.setFocusable(true);
-		
 		
 	}
 	 
@@ -67,7 +63,6 @@ public class GamePanel extends JPanel implements Runnable {
 		//Für das Zählen der Bilder pro Sekunde (fps)
 		int framesCounter = 0;
 		double timePassed = 0;
-		
 		
 		while(gameThread != null) {
 			
@@ -112,7 +107,6 @@ public class GamePanel extends JPanel implements Runnable {
 				timePassed = 0;
 			}
 			
-
 		}
 	}
 
@@ -127,7 +121,6 @@ public class GamePanel extends JPanel implements Runnable {
 		}
 		
 		//Bewegung der Spieler auf der Y-Achse
-		
 		
 		double jumpTimeInSeconds = jumpTime / s2ns;
 		
@@ -165,6 +158,4 @@ public class GamePanel extends JPanel implements Runnable {
 		
 	}
 		
-	
-	
 }

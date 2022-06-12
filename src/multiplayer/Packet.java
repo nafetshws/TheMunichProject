@@ -4,14 +4,19 @@ import java.io.Serializable;
 
 public class Packet implements Serializable{
 	
-	private String message;
+	private int id;
 	
-	public Packet(String message) {
-		this.message = message;
+	public Packet(int id) {
+		this.id = id;
 	}
 	
-	public String getMessage() {
-		return message;
+	public int getSenderId() {
+		return id;
+	}
+
+	public void prettyPrintData() {
+		System.out.println("Sender: Player " + id);
+		System.out.println();
 	}
 
 }

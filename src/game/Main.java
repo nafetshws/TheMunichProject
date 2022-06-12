@@ -1,11 +1,31 @@
 package game;
 
+import multiplayer.Client;
+import multiplayer.Server;
+import ui.MainWindow;
+
 public class Main {
+	
 	public static void main(String[] args) {
-		System.out.println("Hello world");
-		System.out.println("Hello von Tobias");
-		System.out.println("Hello von Maya");
-		System.out.println("Servus von Jana");
+		MainWindow window = new MainWindow();
+		
+		boolean isServer = args[0].contains("server") ? true : false;
+		
+		if(isServer) {
+			try {
+				Server server = new Server();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			try {
+				Client client = new Client();
+			} catch (Exception e) {
+				//Server existiert vermutlich nicht
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public int add(int a, int b) {

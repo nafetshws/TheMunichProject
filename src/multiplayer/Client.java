@@ -6,26 +6,36 @@ import java.net.Socket;
 
 public class Client {
 	
+	private ObjectOutputStream outStream;
+	private ObjectInputStream inStream;
+	
 	public static void main(String[] args) throws Exception{
 		new Client();
 	}
 	
 	public Client() throws Exception{
-		Socket socket = new Socket("127.0.0.1", Server.PORT);
+		Socket socket = new Socket("localhost", Server.PORT);
 		
-		ObjectOutputStream outStream = new ObjectOutputStream(socket.getOutputStream());
-		ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream());
+		outStream = new ObjectOutputStream(socket.getOutputStream());
+		inStream = new ObjectInputStream(socket.getInputStream());
 		
+		sendPlayerPosition(1, 500, 700);
+		PlayerPositionPacket receivedPlayerPosition = getOpponentPosition();
 		
-		Packet clientHello = new Packet("Hallo vom Client!");
-		outStream.writeObject(clientHello);
-		
-		Packet p = (Packet) inStream.readObject();
-		String msg = p.getMessage();
-		System.out.println("Server: " + msg);
+		receivedPlayerPosition.prettyPrintData();
 		
 		socket.close();
 		
+	}
+	
+	public PlayerPositionPacket getOpponentPosition() throws Exception {
+		PlayerPositionPacket opponentPosition = (PlayerPositionPacket) inStream.readObject();
+		return opponentPosition;
+	}
+	
+	public void sendPlayerPosition(int playerId, int xPos, int yPos) throws Exception {
+		PlayerPositionPacket p = new PlayerPositionPacket(playerId, xPos, yPos);
+		outStream.writeObject(p);
 	}
 
 }

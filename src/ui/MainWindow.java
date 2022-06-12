@@ -10,10 +10,8 @@ public class MainWindow {
 	
 	private static final int PREFFERED_SCREEN_WDITH = 1920;
 	private static final int PREFFERED_SCREEN_HEIGHT = 1080;
-	
-    public static void main(String[] args) {
-    	
-
+    
+    public MainWindow() {
         JFrame frame = new JFrame("TheMunichProject");
         GamePanel gamePanel = new GamePanel();
         
