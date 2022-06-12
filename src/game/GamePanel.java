@@ -1,7 +1,6 @@
 package game;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -11,23 +10,26 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel implements Runnable {
 	
 	private String os;
+	//Sekunden zu Nanosekunden
+	private double s2ns = Math.pow(10, 9);
 	
 	private int xPos = 500;
 	private int yPos = 700;
-	private int speed = 4;
+	private int speed = 8;
 	
-	//FPS (genauer gesagt die Zeit in Millisekunden, die das Programm wartet bevor es einen neuen Durchlauf startet)
-	private int fPS = 8; 
-	private int jumpVelocity = -30;
-	private int gravitationalAcceleration = 1;
+	//frames per second
+	private int FPS = 60;
 	
-	//benutze ich als Zeitz�hlung
-	private int count=0;
-	
+	private int jumpVelocity = -25;
+	private double jumpTime = 0;
+	private boolean isJumping;
+	private int gravitationalAcceleration = 20;
+
 	//Thread ist die Zeit
 	private Thread gameThread;
 	// verwaltet die Tastenangabe
 	private KeyHandler keyHandler = new KeyHandler();
+
 	
 	
 	
@@ -52,38 +54,71 @@ public class GamePanel extends JPanel implements Runnable {
 		gameThread = new Thread(this);
 		gameThread.start();
 	}
-
-
+	
 	@Override
 	public void run() {
 		
+		//Anzahl an Nanosekunden, die pro Zyklus vergehen dürfen, damit man auf die entsprechende Anzahl an Bildern pro Sekunde kommt
+		double nsPerTick = s2ns / FPS;
+		double lastTime = System.nanoTime();
+		//Artikel der das Prinzip von delta time erklärt: https://drewcampbell92.medium.com/understanding-delta-time-b53bf4781a03
+		double delta = 0;
+		
+		//Für das Zählen der Bilder pro Sekunde (fps)
+		int framesCounter = 0;
+		double timePassed = 0;
+		
+		
 		while(gameThread != null) {
 			
-			count++;
-			// updated Spielinformationen;
-			update();
+			double currentTime = System.nanoTime();
+			//Addiert zur Deltazeit, den Bruchteil von: 
+			//	Wie viel Zeit beim Rendern des letzten Bildes vergangen ist,
+			//	-------------------------------------------------------------------------------------------------------
+			//	Wie viel Zeit maximal vergehen darf, damit man auf die entsprechende Anzahl an Bilder pro Sekunde kommt
 			
-			// setzt die neuen Spielinformationen graphisch um
-			repaint();
-			//optimiert Leistung für linux
-			if(os.contains("Linux")) {
-				Toolkit.getDefaultToolkit().sync();
+			delta += (currentTime - lastTime) / nsPerTick;
+			
+			//Vergangen Zeit zwischen Jetzt und dem davor gerenderten Bild
+			double timeInterval = (currentTime - lastTime);
+			
+			//addiert Zeit für den Sprung
+			if(isJumping) jumpTime += timeInterval;
+			
+			//Addiert zur vergangenen Zeit für fps counter
+			timePassed += timeInterval;
+			
+			lastTime = currentTime;
+			
+			//Sobald die Zeit überschritten wurde, um die entsprechende Anzahl an Bilder/s zu erreichen, wird das neue Bild gerendert.
+			if(delta >= 1) {
+				update();
+				repaint();
+				
+				//Notwendig zum Zählen der fps
+				framesCounter++;
+				
+				//Optimierung von Swing für Linux
+				if(os.contains("Linux")) {
+					Toolkit.getDefaultToolkit().sync();
+				}
+				//Delta zurücksetzen
+				delta--;
 			}
 			
-			try {
-				Thread.sleep(fPS);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if(timePassed >= s2ns) {
+				//System.out.println("FPS: " + framesCounter);
+				framesCounter = 0;
+				timePassed = 0;
 			}
 			
+
 		}
-		
 	}
+
 	
 	public void update() {
-		//bewegt die Spieler
-		
+		//Bewegung der Spieler auf der X-Achse
 		if(keyHandler.getRight()) {
 			xPos = xPos + speed;
 		}
@@ -91,20 +126,28 @@ public class GamePanel extends JPanel implements Runnable {
 			xPos = xPos-speed;		
 		}
 		
-		//y(t)=0.5*g*t*t+v*t+y
-		yPos = (int) (0.5*gravitationalAcceleration*count*count+jumpVelocity*count+700);
-		if(yPos >= 700) {
+		//Bewegung der Spieler auf der Y-Achse
+		
+		
+		double jumpTimeInSeconds = jumpTime / s2ns;
+		
+		// Zur Manipulation der Zeit einfach die Konstante verändern
+		double gameJumpTime = jumpTimeInSeconds * 10;
+		
+		//y(t)=0.5*g*t*t+v*t
+		yPos += (0.5 * gravitationalAcceleration * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime);
+		
+		if(yPos > 700) {
+			//Damit der Spieler nicht durch den Boden fällt
 			yPos = 700;
-					
+			isJumping = false;
+			jumpTime = 0;
 		}
 		
-		if(keyHandler.getUp()) {
-			//startet die Zeitz�hlung f�r den Sprung
-			//startet nur, wenn sich das objekt auf dem Boden befindet
-			if(yPos >= 700) {
-				count = 0;
-			}
-			
+		if(keyHandler.getUp() && !isJumping) {
+			//Sprung registriert
+			jumpTime = 0;
+			isJumping = true;
 		}
 		
 	}
