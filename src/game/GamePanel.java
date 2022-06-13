@@ -15,10 +15,6 @@ public class GamePanel extends JPanel implements Runnable {
 	//Sekunden zu Nanosekunden
 	private double s2ns = Math.pow(10, 9);
 	
-	private int xPos = 500;
-	private int yPos = 700;
-	private int speed = 8;
-	
 	private PlayerPositionPacket playerPosition;
 	
 	//frames per second
@@ -51,7 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
 	}
 	
 	public void init() {
-		playerPosition = new PlayerPositionPacket(0, xPos, yPos, speed);
+		playerPosition = new PlayerPositionPacket(0, 500, 700, 8);
 	}
 	 
 	public void startGameThread() {
@@ -123,11 +119,11 @@ public class GamePanel extends JPanel implements Runnable {
 	public void update() {
 		//Bewegung der Spieler auf der X-Achse
 		if(keyHandler.getRight()) {
-			playerPosition.setxPos(playerPosition.getXPos() + speed);
+			playerPosition.setxPos(playerPosition.getXPos() + playerPosition.getSpeed());
 			//xPos = xPos + speed;
 		}
 		else if(keyHandler.getLeft()) {
-			playerPosition.setxPos(playerPosition.getXPos() - speed);
+			playerPosition.setxPos(playerPosition.getXPos() - playerPosition.getSpeed());
 			//xPos = xPos-speed;		
 		}
 		
@@ -140,7 +136,7 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		//y(t)=0.5*g*t*t+v*t
 		//yPos += (0.5 * gravitationalAcceleration * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime);
-		playerPosition.setyPos(yPos + (int)(0.5 * gravitationalAcceleration * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime)); 
+		playerPosition.setyPos(playerPosition.getYPos() + (int)(0.5 * gravitationalAcceleration * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime)); 
 		
 		if(playerPosition.getYPos() > 700) {
 			//Damit der Spieler nicht durch den Boden fällt
