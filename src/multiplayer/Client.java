@@ -1,5 +1,6 @@
 package multiplayer;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -9,22 +10,38 @@ public class Client {
 	private ObjectOutputStream outStream;
 	private ObjectInputStream inStream;
 	
+	private Socket socket;
+	
+	public boolean activeConnection = true;
+	
 	public static void main(String[] args) throws Exception{
 		new Client();
 	}
 	
 	public Client() throws Exception{
-		Socket socket = new Socket("localhost", Server.PORT);
+		socket = new Socket("localhost", Server.PORT);
 		
 		outStream = new ObjectOutputStream(socket.getOutputStream());
 		inStream = new ObjectInputStream(socket.getInputStream());
 		
-		sendPlayerPosition(1, 500, 700);
-		PlayerPositionPacket receivedPlayerPosition = getOpponentPosition();
+		TestPacket testPacket = new TestPacket(1, "Test Nachricht 1 von Client");
+		outStream.writeObject(testPacket);
 		
-		receivedPlayerPosition.prettyPrintData();
+		Thread.sleep(1000*5);
 		
-		socket.close();
+		TestPacket testPacket2 = new TestPacket(1, "Test Nachricht 2 von Client");
+		outStream.writeObject(testPacket2);
+		
+		ConnectionClosePacket closePacket = new ConnectionClosePacket(1);
+		outStream.writeObject(closePacket);
+		
+		
+//		sendPlayerPosition(1, 500, 700);
+//		PlayerPositionPacket receivedPlayerPosition = getOpponentPosition();
+//		
+//		receivedPlayerPosition.prettyPrintData();
+		
+		closeClientConnection();
 		
 	}
 	
@@ -33,9 +50,20 @@ public class Client {
 		return opponentPosition;
 	}
 	
-	public void sendPlayerPosition(int playerId, int xPos, int yPos) throws Exception {
-		PlayerPositionPacket p = new PlayerPositionPacket(playerId, xPos, yPos);
-		outStream.writeObject(p);
+	public void sendPlayerPosition(PlayerPositionPacket packet) throws Exception {
+		outStream.writeObject(packet);
+	}
+	
+	public void closeClientConnection() {
+		try {
+			outStream.close();
+			inStream.close();
+			socket.close();
+		} catch (IOException e) {
+			System.out.println("Fehler beim Schließen des ClientSockets");
+			e.printStackTrace();
+		}
+
 	}
 
 }

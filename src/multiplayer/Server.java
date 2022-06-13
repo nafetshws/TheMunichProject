@@ -9,38 +9,46 @@ import java.net.Socket;
 public class Server {
 	
 	public static final int PORT = 3000;
+	
 	private ObjectOutputStream outStream;
 	private ObjectInputStream inStream;
 	
+	private ServerSocket serverSocket;
+	private Socket socket;
 	
+	public boolean activeConnection = true;
 	
 	public static void main(String[] args) throws Exception{
 		new Server();
 	}
 	
 	public Server() throws Exception{
-		ServerSocket serverSocket = new ServerSocket(PORT);
+		serverSocket = new ServerSocket(PORT);
 		System.out.println("Server: Server läuft auf port " + PORT);
-		Socket socket = serverSocket.accept();
+		socket = serverSocket.accept();
 		
 		outStream = new ObjectOutputStream(socket.getOutputStream());
 		inStream = new ObjectInputStream(socket.getInputStream());
 		
-		PlayerPositionPacket receivedPlayerPosition = getOpponentPosition();
-		receivedPlayerPosition.prettyPrintData();
-		sendPlayerPosition(0, 500, 700);
+		while(activeConnection) {
+			//TestPacket packet = (TestPacket) inStream.readObject();
+			//packet.printData();
+			Packet packet = (Packet) inStream.readObject();
+			int id = packet.getPacketId();
+			System.out.println("Packet id: " + id);
+			
+			if(id == 1) {
+				TestPacket p = (TestPacket) packet;
+				p.printData();
+			}
+			
+			if(id == 0) {
+				activeConnection = false;
+			}
+		}
 		
-		
-//		//read
-//		Packet serverHello = (Packet) inStream.readObject();
-//		String message = serverHello.getMessage();
-//		System.out.println("Client: " + message);
-//		
-//		//write
-//		Packet p = new Packet("Hallo vom Server!");
-//		outStream.writeObject(p);
-		
-		serverSocket.close();
+		closeServerConnection();
+
 	}
 	
 	public PlayerPositionPacket getOpponentPosition() throws Exception {
@@ -48,9 +56,21 @@ public class Server {
 		return opponentPosition;
 	}
 	
-	public void sendPlayerPosition(int playerId, int xPos, int yPos) throws Exception {
-		PlayerPositionPacket p = new PlayerPositionPacket(playerId, xPos, yPos);
-		outStream.writeObject(p);
+	public void sendPlayerPosition(PlayerPositionPacket packet) throws Exception {
+		outStream.writeObject(packet);
+	}
+	
+	public void closeServerConnection() {
+		try {
+			outStream.close();
+			inStream.close();
+			socket.close();
+			serverSocket.close();
+		} catch (IOException e) {
+			System.out.println("Fehler beim Schließen des ServerSockets");
+			e.printStackTrace();
+		}
+
 	}
 
 }

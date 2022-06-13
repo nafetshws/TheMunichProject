@@ -7,6 +7,8 @@ import java.awt.Toolkit;
 
 import javax.swing.JPanel;
 
+import multiplayer.PlayerPositionPacket;
+
 public class GamePanel extends JPanel implements Runnable {
 	
 	private String os;
@@ -16,6 +18,8 @@ public class GamePanel extends JPanel implements Runnable {
 	private int xPos = 500;
 	private int yPos = 700;
 	private int speed = 8;
+	
+	private PlayerPositionPacket playerPosition;
 	
 	//frames per second
 	private int FPS = 60;
@@ -34,6 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public GamePanel() {
 		
 		os = System.getProperty("os.name");
+		init();
 		
 		// erh�ht die Rendering Performance
 		this.setDoubleBuffered(true);	
@@ -43,6 +48,10 @@ public class GamePanel extends JPanel implements Runnable {
 		this.addKeyListener(keyHandler);
 		this.setFocusable(true);
 		
+	}
+	
+	public void init() {
+		playerPosition = new PlayerPositionPacket(0, xPos, yPos, speed);
 	}
 	 
 	public void startGameThread() {
@@ -114,10 +123,12 @@ public class GamePanel extends JPanel implements Runnable {
 	public void update() {
 		//Bewegung der Spieler auf der X-Achse
 		if(keyHandler.getRight()) {
-			xPos = xPos + speed;
+			playerPosition.setxPos(playerPosition.getXPos() + speed);
+			//xPos = xPos + speed;
 		}
 		else if(keyHandler.getLeft()) {
-			xPos = xPos-speed;		
+			playerPosition.setxPos(playerPosition.getXPos() - speed);
+			//xPos = xPos-speed;		
 		}
 		
 		//Bewegung der Spieler auf der Y-Achse
@@ -128,11 +139,13 @@ public class GamePanel extends JPanel implements Runnable {
 		double gameJumpTime = jumpTimeInSeconds * 10;
 		
 		//y(t)=0.5*g*t*t+v*t
-		yPos += (0.5 * gravitationalAcceleration * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime);
+		//yPos += (0.5 * gravitationalAcceleration * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime);
+		playerPosition.setyPos(yPos + (int)(0.5 * gravitationalAcceleration * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime)); 
 		
-		if(yPos > 700) {
+		if(playerPosition.getYPos() > 700) {
 			//Damit der Spieler nicht durch den Boden fällt
-			yPos = 700;
+			playerPosition.setyPos(700);
+			//yPos = 700;
 			isJumping = false;
 			jumpTime = 0;
 		}
@@ -153,7 +166,7 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		//erzeugt ein quadratisches Objekt
 		g2.setColor(Color.black);
-		g2.fillRect(xPos,yPos, 100, 100);
+		g2.fillRect(playerPosition.getXPos(),playerPosition.getYPos(), 100, 100);
 		g2.dispose();
 		
 	}
