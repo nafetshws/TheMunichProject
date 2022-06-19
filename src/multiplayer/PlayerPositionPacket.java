@@ -17,7 +17,7 @@ public class PlayerPositionPacket extends Packet{
 	
 	@Override
 	public void prettyPrintData() {
-		System.out.println("Sender: Player " + super.getSenderId());
+		System.out.println("Sender: Player " + super.getPlayerId());
 		System.out.println("X-Position: " + xPos);
 		System.out.println("Y-Position: " + yPos);
 		System.out.println();

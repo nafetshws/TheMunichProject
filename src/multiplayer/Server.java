@@ -1,5 +1,7 @@
 package multiplayer;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,61 +12,60 @@ public class Server {
 	
 	public static final int PORT = 3000;
 	
-	private ObjectOutputStream outStream;
-	private ObjectInputStream inStream;
-	
 	private ServerSocket serverSocket;
-	private Socket socket;
 	
-	public boolean activeConnection = true;
+	private int maxNumberOfPlayers;
+	private int numberOfPlayers;
+
 	
-	public static void main(String[] args) throws Exception{
-		new Server();
+	public Server(){
+		numberOfPlayers = 0;
+		maxNumberOfPlayers = 2;
+		
+		try {
+			serverSocket = new ServerSocket(PORT);
+		} catch (IOException e) {
+			System.out.println("Fehler beim Erstellen des GameServerSockets");
+			e.printStackTrace();
+		}
 	}
 	
-	public Server() throws Exception{
-		serverSocket = new ServerSocket(PORT);
-		System.out.println("Server: Server läuft auf port " + PORT);
-		socket = serverSocket.accept();
+	public void waitForConnections() {
+		System.out.println("Warten auf Spieler...");
 		
-		outStream = new ObjectOutputStream(socket.getOutputStream());
-		inStream = new ObjectInputStream(socket.getInputStream());
-		
-		while(activeConnection) {
-			//TestPacket packet = (TestPacket) inStream.readObject();
-			//packet.printData();
-			Packet packet = (Packet) inStream.readObject();
-			int id = packet.getPacketId();
-			System.out.println("Packet id: " + id);
+		while(numberOfPlayers < maxNumberOfPlayers) {
+			try {
+				Socket socket = serverSocket.accept();
 			
-			if(id == 1) {
-				TestPacket p = (TestPacket) packet;
-				p.printData();
-			}
-			
-			if(id == 0) {
-				activeConnection = false;
+				//Spieler hat sich verbunden
+				
+				
+				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+				
+				numberOfPlayers++;
+				
+				PlayerAuthenticationPacket auth = new PlayerAuthenticationPacket(numberOfPlayers);
+				out.writeObject(auth);
+				
+				System.out.println("Spieler #" + numberOfPlayers + " hat sich erfolgreich mit dem Server verbunden");
+			} catch (IOException e) {
+				System.out.println("Fehler bei Verbindung des Servers mit dem Spieler");
+				e.printStackTrace();
 			}
 		}
 		
-		closeServerConnection();
-
+		System.out.println("Alle Spieler haben sich erfolgreich mit dem Server verbunden!");
 	}
 	
-	public PlayerPositionPacket getOpponentPosition() throws Exception {
-		PlayerPositionPacket opponentPosition = (PlayerPositionPacket) inStream.readObject();
-		return opponentPosition;
+	public static void main(String[] args) {
+		Server gameServer = new Server();
+		gameServer.waitForConnections();
 	}
 	
-	public void sendPlayerPosition(PlayerPositionPacket packet) throws Exception {
-		outStream.writeObject(packet);
-	}
 	
 	public void closeServerConnection() {
 		try {
-			outStream.close();
-			inStream.close();
-			socket.close();
 			serverSocket.close();
 		} catch (IOException e) {
 			System.out.println("Fehler beim Schließen des ServerSockets");

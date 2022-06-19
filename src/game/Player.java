@@ -2,6 +2,16 @@ package game;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+import multiplayer.Packet;
+import multiplayer.PlayerAuthenticationPacket;
+import multiplayer.Server;
 
 public class Player {
 	
@@ -19,6 +29,11 @@ public class Player {
 	private double jumpTime;
 	private double s2ns = Math.pow(10, 9);
 	
+	//Multiplayer
+	private Socket socket;
+	
+	private int playerId;
+	
 	
 	public Player(int x, int y, Color color) {
 		this.x = x;
@@ -32,9 +47,8 @@ public class Player {
 	}
 	
 	public void drawSprite(Graphics2D g2) {
-		g2.setColor(Color.black);
+		g2.setColor(color);
 		g2.fillRect(x, y, size, size);
-		g2.dispose();
 	}
 	
 	public void moveLeft() {
@@ -96,5 +110,38 @@ public class Player {
 	
 	public boolean getIsJumping() {
 		return isJumping;
+	}
+	
+	public int getPlayerId() {
+		return playerId;
+	}
+	
+	//Multiplayer
+	
+	public void connectToServer() {
+		try {
+			socket = new Socket("localhost", Server.PORT);
+			
+			
+			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+			
+			Packet packet = (Packet) in.readObject();
+			if (packet.getPacketId() == PlayerAuthenticationPacket.PACKET_ID) {
+				PlayerAuthenticationPacket auth = (PlayerAuthenticationPacket) packet;
+				playerId = auth.getPlayerId();
+			}
+			else {
+				System.out.println("Failed to authenticate!");
+			}
+			
+			if(playerId == 1) {
+				System.out.println("Warte auf 2. Spieler...");
+			}
+
+		} catch (IOException | ClassNotFoundException e) {
+			System.out.println("Player failed to connect to Server");
+			e.printStackTrace();
+		}
 	}
 }

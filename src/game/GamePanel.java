@@ -27,10 +27,19 @@ public class GamePanel extends JPanel implements Runnable {
 	// verwaltet die Tastenangabe
 	private KeyHandler keyHandler = new KeyHandler();
 	
-	private Player me;
+	public Player me;
+	public Player enemy;
 	
 	
-	public GamePanel() {
+	public GamePanel(Player me) {
+		
+		this.me = me;
+		if(me.getPlayerId() == 1) {
+			enemy = new Player(600, 300, Color.red);
+		}
+		else {
+			enemy = new Player(100, 300, Color.black);
+		}
 		
 		os = System.getProperty("os.name");
 		
@@ -41,8 +50,6 @@ public class GamePanel extends JPanel implements Runnable {
 		 
 		this.addKeyListener(keyHandler);
 		this.setFocusable(true);
-		
-		me = new Player(100, 300, Color.black);
 		
 	}
 	 
@@ -96,7 +103,7 @@ public class GamePanel extends JPanel implements Runnable {
 				//Notwendig zum Zählen der fps
 				framesCounter++;
 				
-				//Optimierung von Swing für Linux
+				//Optimierung für Linux
 				if(os.contains("Linux")) {
 					Toolkit.getDefaultToolkit().sync();
 				}
@@ -137,8 +144,14 @@ public class GamePanel extends JPanel implements Runnable {
 		// Die folgenden 2 Zeilen verstehe ich nicht
 		super.paintComponent(g);
 		
+		Graphics2D g2 = (Graphics2D) g;
+		
 		//Zeichnet Spieler am Screen
 		me.drawSprite((Graphics2D) g);
+		enemy.drawSprite((Graphics2D) g);
+		
+		//Alles was hinter dispose steht wird nicht mehr gerendert
+		g2.dispose();
 		
 	}
 		

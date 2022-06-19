@@ -16,7 +16,7 @@ public class TestPacket extends Packet{
 	}
 	
 	public void printData() {
-		System.out.println(super.getSenderId() + ": " + message);
+		System.out.println(super.getPlayerId() + ": " + message);
 	}
 
 }
