@@ -7,15 +7,12 @@ import java.awt.Toolkit;
 
 import javax.swing.JPanel;
 
-import multiplayer.PlayerPositionPacket;
 
 public class GamePanel extends JPanel implements Runnable {
 	
 	private String os;
 	//Sekunden zu Nanosekunden
 	private double s2ns = Math.pow(10, 9);
-	
-	private PlayerPositionPacket playerPosition;
 	
 	//frames per second
 	private int FPS = 60;
@@ -30,11 +27,12 @@ public class GamePanel extends JPanel implements Runnable {
 	// verwaltet die Tastenangabe
 	private KeyHandler keyHandler = new KeyHandler();
 	
+	private Player me;
+	
 	
 	public GamePanel() {
 		
 		os = System.getProperty("os.name");
-		init();
 		
 		// erh�ht die Rendering Performance
 		this.setDoubleBuffered(true);	
@@ -44,10 +42,8 @@ public class GamePanel extends JPanel implements Runnable {
 		this.addKeyListener(keyHandler);
 		this.setFocusable(true);
 		
-	}
-	
-	public void init() {
-		playerPosition = new PlayerPositionPacket(0, 500, 700, 8);
+		me = new Player(100, 300, Color.black);
+		
 	}
 	 
 	public void startGameThread() {
@@ -69,6 +65,8 @@ public class GamePanel extends JPanel implements Runnable {
 		int framesCounter = 0;
 		double timePassed = 0;
 		
+		
+		//game loop
 		while(gameThread != null) {
 			
 			double currentTime = System.nanoTime();
@@ -118,52 +116,29 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public void update() {
 		//Bewegung der Spieler auf der X-Achse
-		if(keyHandler.getRight()) {
-			playerPosition.setxPos(playerPosition.getXPos() + playerPosition.getSpeed());
-			//xPos = xPos + speed;
-		}
-		else if(keyHandler.getLeft()) {
-			playerPosition.setxPos(playerPosition.getXPos() - playerPosition.getSpeed());
-			//xPos = xPos-speed;		
-		}
+		if(keyHandler.getRight()) me.moveRight();
+		if(keyHandler.getLeft()) me.moveLeft();
 		
 		//Bewegung der Spieler auf der Y-Achse
 		
 		double jumpTimeInSeconds = jumpTime / s2ns;
 		
-		// Zur Manipulation der Zeit einfach die Konstante verändern
+		//Zur Manipulation der Zeit einfach die Konstante verändern
 		double gameJumpTime = jumpTimeInSeconds * 10;
 		
-		//y(t)=0.5*g*t*t+v*t
-		//yPos += (0.5 * gravitationalAcceleration * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime);
-		playerPosition.setyPos(playerPosition.getYPos() + (int)(0.5 * gravitationalAcceleration * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime)); 
+		//Updated y Position vom Spieler
+		me.updateY();
 		
-		if(playerPosition.getYPos() > 700) {
-			//Damit der Spieler nicht durch den Boden fällt
-			playerPosition.setyPos(700);
-			//yPos = 700;
-			isJumping = false;
-			jumpTime = 0;
-		}
-		
-		if(keyHandler.getUp() && !isJumping) {
-			//Sprung registriert
-			jumpTime = 0;
-			isJumping = true;
-		}
-		
+		if(keyHandler.getUp() && !me.getIsJumping()) me.jump();
 	}
 	
 	public void paintComponent(Graphics g) {
 		// Methode repaint (Warum die jetzt anders hei�t, wei� ich auch nicht)
 		// Die folgenden 2 Zeilen verstehe ich nicht
 		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
 		
-		//erzeugt ein quadratisches Objekt
-		g2.setColor(Color.black);
-		g2.fillRect(playerPosition.getXPos(),playerPosition.getYPos(), 100, 100);
-		g2.dispose();
+		//Zeichnet Spieler am Screen
+		me.drawSprite((Graphics2D) g);
 		
 	}
 		

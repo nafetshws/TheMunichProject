@@ -7,25 +7,8 @@ import ui.MainWindow;
 public class Main {
 	
 	public static void main(String[] args) {
-		MainWindow window = new MainWindow();
+		MainWindow window = new MainWindow(720, 480, "TheMunicProject");
 		
-		boolean isServer = args[0].contains("server") ? true : false;
-		
-		if(isServer) {
-			try {
-				Server server = new Server();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			try {
-				Client client = new Client();
-			} catch (Exception e) {
-				//Server existiert vermutlich nicht
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	public int add(int a, int b) {

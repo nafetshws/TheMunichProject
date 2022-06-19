@@ -1,18 +1,22 @@
-package ui;
+package game;
 
-import javax.swing.*;
+import java.awt.Dimension;
 
-import game.GamePanel;
+import javax.swing.JFrame;
 
-import java.awt.*;
-
-public class MainWindow {
+public class PlayerFrame {
 	
-	private static final int PREFFERED_SCREEN_WDITH = 1920;
-	private static final int PREFFERED_SCREEN_HEIGHT = 1080;
-    
-    public MainWindow(int width, int height, String title) {
-        JFrame frame = new JFrame(title);
+	private int width, height;
+	
+	private KeyHandler keyHandler;
+	
+	public PlayerFrame(int width, int height) {
+		this.width = width;
+		this.height = height;
+	}
+	
+	public void setUpGUI() {
+        JFrame frame = new JFrame("Game");
         GamePanel gamePanel = new GamePanel();
         
         //Damit das Spiel richtig schließt
@@ -32,6 +36,11 @@ public class MainWindow {
         // display it
         frame.pack();
         frame.setVisible(true);
+	}
+	
+	public static void main(String[] args) {
+		PlayerFrame pF = new PlayerFrame(720, 480);
+		pF.setUpGUI();
+	}
 
-    }
 }
