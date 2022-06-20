@@ -14,6 +14,15 @@ public class Server {
 	
 	private ServerSocket serverSocket;
 	
+	private Socket p1Socket;
+	private Socket p2Socket;
+	
+	private ReadFromPlayer readFromP1;
+	private ReadFromPlayer readFromP2;
+	private WriteToPlayer writeToP1;
+	private WriteToPlayer writeToP2;
+
+	
 	private int maxNumberOfPlayers;
 	private int numberOfPlayers;
 
@@ -49,6 +58,22 @@ public class Server {
 				out.writeObject(auth);
 				
 				System.out.println("Spieler #" + numberOfPlayers + " hat sich erfolgreich mit dem Server verbunden");
+				
+				ReadFromPlayer rfp = new ReadFromPlayer(numberOfPlayers, in);
+				WriteToPlayer wtp = new WriteToPlayer(numberOfPlayers, out);
+				
+				if(numberOfPlayers == 1) {
+					p1Socket = socket;
+					readFromP1 = rfp;
+					writeToP1 = wtp;
+				}
+				else {
+					p2Socket = socket;
+					readFromP2 = rfp;
+					writeToP2 = wtp;
+				}
+
+				
 			} catch (IOException e) {
 				System.out.println("Fehler bei Verbindung des Servers mit dem Spieler");
 				e.printStackTrace();
@@ -70,6 +95,42 @@ public class Server {
 		} catch (IOException e) {
 			System.out.println("Fehler beim Schließen des ServerSockets");
 			e.printStackTrace();
+		}
+
+	}
+	
+	public class ReadFromPlayer implements Runnable{
+		
+		private int playerId;
+		private ObjectInputStream in;
+		
+		public ReadFromPlayer(int playerId, ObjectInputStream in) {
+			this.playerId = playerId;
+			this.in = in;
+			System.out.println("Server input stream erstellt für Spieler #" + playerId);
+		}
+
+		@Override
+		public void run() {
+			
+		}
+
+	}
+	
+	public class WriteToPlayer implements Runnable{
+		
+		private int playerId;
+		private ObjectOutputStream out;
+		
+		public WriteToPlayer(int playerId, ObjectOutputStream out) {
+			this.playerId = playerId;
+			this.out = out;
+			System.out.println("Server out stream erstellt für Spieler #" + playerId);
+		}
+
+		@Override
+		public void run() {
+			
 		}
 
 	}

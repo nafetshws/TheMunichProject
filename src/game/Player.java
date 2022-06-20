@@ -11,7 +11,9 @@ import java.net.Socket;
 
 import multiplayer.Packet;
 import multiplayer.PlayerAuthenticationPacket;
+import multiplayer.ReadFromServer;
 import multiplayer.Server;
+import multiplayer.WriteToServer;
 
 public class Player {
 	
@@ -31,6 +33,8 @@ public class Player {
 	
 	//Multiplayer
 	private Socket socket;
+	private ReadFromServer readFromServer;
+	private WriteToServer writeToServer;
 	
 	private int playerId;
 	
@@ -138,10 +142,17 @@ public class Player {
 			if(playerId == 1) {
 				System.out.println("Warte auf 2. Spieler...");
 			}
+			
+			readFromServer = new ReadFromServer(in);
+			writeToServer = new WriteToServer(out);
 
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.println("Player failed to connect to Server");
 			e.printStackTrace();
 		}
 	}
+	
+	
 }
+
+

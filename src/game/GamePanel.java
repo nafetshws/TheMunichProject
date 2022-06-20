@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.JPanel;
 
@@ -153,6 +155,39 @@ public class GamePanel extends JPanel implements Runnable {
 		//Alles was hinter dispose steht wird nicht mehr gerendert
 		g2.dispose();
 		
+	}
+	
+	private class WriteToServer implements Runnable{
+		
+		private ObjectOutputStream out;
+		
+		public WriteToServer(ObjectOutputStream out) {
+			this.out = out;
+		}
+
+		@Override
+		public void run() {
+			
+			while(true) {
+				//out.writeObject();
+			}
+		}
+
+	}
+	
+	public class ReadFromServer implements Runnable{
+		
+		private ObjectInputStream in;
+		
+		public ReadFromServer(ObjectInputStream in) {
+			this.in = in;
+		}
+
+		@Override
+		public void run() {
+
+		}
+
 	}
 		
 }
