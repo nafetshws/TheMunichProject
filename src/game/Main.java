@@ -9,7 +9,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		//Um die Applikation ausführen zu können, muss man vorher Server.java ausführen.
+		//Um die Applikation ausführen zu können, muss man vorher Server.java ausführen
 		
 		Player player1 = new Player(100, 300, Color.black);
 		Player player2 = new Player(600, 300, Color.red);
