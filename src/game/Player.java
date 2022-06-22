@@ -11,9 +11,7 @@ import java.net.Socket;
 
 import multiplayer.Packet;
 import multiplayer.PlayerAuthenticationPacket;
-import multiplayer.ReadFromServer;
 import multiplayer.Server;
-import multiplayer.WriteToServer;
 
 public class Player {
 	
@@ -33,8 +31,8 @@ public class Player {
 	
 	//Multiplayer
 	private Socket socket;
-	private ReadFromServer readFromServer;
-	private WriteToServer writeToServer;
+	//private ReadFromServer readFromServer;
+	//private WriteToServer writeToServer;
 	
 	private int playerId;
 	
@@ -50,7 +48,7 @@ public class Player {
 		this.jumpTime = 0;	
 	}
 	
-	public void drawSprite(Graphics2D g2) {
+	public void drawPlayer(Graphics2D g2) {
 		g2.setColor(color);
 		g2.fillRect(x, y, size, size);
 	}
@@ -143,8 +141,8 @@ public class Player {
 				System.out.println("Warte auf 2. Spieler...");
 			}
 			
-			readFromServer = new ReadFromServer(in);
-			writeToServer = new WriteToServer(out);
+			//readFromServer = new ReadFromServer(in);
+			//writeToServer = new WriteToServer(out);
 
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.println("Player failed to connect to Server");

@@ -19,10 +19,7 @@ public class GamePanel extends JPanel implements Runnable {
 	//frames per second
 	private int FPS = 60;
 	
-	private int jumpVelocity = -25;
-	private double jumpTime = 0;
 	private boolean isJumping;
-	private int gravitationalAcceleration = 20;
 
 	//Thread ist die Zeit
 	private Thread gameThread;
@@ -89,9 +86,6 @@ public class GamePanel extends JPanel implements Runnable {
 			//Vergangen Zeit zwischen Jetzt und dem davor gerenderten Bild
 			double timeInterval = (currentTime - lastTime);
 			
-			//addiert Zeit für den Sprung
-			if(isJumping) jumpTime += timeInterval;
-			
 			//Addiert zur vergangenen Zeit für fps counter
 			timePassed += timeInterval;
 			
@@ -125,15 +119,8 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public void update() {
 		//Bewegung der Spieler auf der X-Achse
-		if(keyHandler.getRight()) me.moveRight();
-		if(keyHandler.getLeft()) me.moveLeft();
-		
-		//Bewegung der Spieler auf der Y-Achse
-		
-		double jumpTimeInSeconds = jumpTime / s2ns;
-		
-		//Zur Manipulation der Zeit einfach die Konstante verändern
-		double gameJumpTime = jumpTimeInSeconds * 10;
+		if(keyHandler.getRight() == true) me.moveRight();
+		if(keyHandler.getLeft() == true) me.moveLeft();
 		
 		//Updated y Position vom Spieler
 		me.updateY();
@@ -149,8 +136,8 @@ public class GamePanel extends JPanel implements Runnable {
 		Graphics2D g2 = (Graphics2D) g;
 		
 		//Zeichnet Spieler am Screen
-		me.drawSprite((Graphics2D) g);
-		enemy.drawSprite((Graphics2D) g);
+		me.drawPlayer((Graphics2D) g);
+		enemy.drawPlayer((Graphics2D) g);
 		
 		//Alles was hinter dispose steht wird nicht mehr gerendert
 		g2.dispose();
