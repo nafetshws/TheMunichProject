@@ -11,6 +11,7 @@ import java.net.Socket;
 
 import multiplayer.Packet;
 import multiplayer.PlayerAuthenticationPacket;
+import multiplayer.PlayerPositionPacket;
 import multiplayer.Server;
 
 public class Player {
@@ -31,10 +32,12 @@ public class Player {
 	
 	//Multiplayer
 	private Socket socket;
-	//private ReadFromServer readFromServer;
-	//private WriteToServer writeToServer;
+	private ReadFromServer readFromServer;
+	private WriteToServer writeToServer;
 	
 	private int playerId;
+	
+	private int enemyX, enemyY, enemySpeed;
 	
 	
 	public Player(int x, int y, Color color) {
@@ -110,6 +113,14 @@ public class Player {
 		this.y = y;
 	}
 	
+	public int getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(int speed) {
+		this.speed = speed;
+	}
+
 	public boolean getIsJumping() {
 		return isJumping;
 	}
@@ -120,6 +131,30 @@ public class Player {
 	
 	//Multiplayer
 	
+	public int getEnemyX() {
+		return enemyX;
+	}
+
+	public void setEnemyX(int enemyX) {
+		this.enemyX = enemyX;
+	}
+
+	public int getEnemyY() {
+		return enemyY;
+	}
+
+	public void setEnemyY(int enemyY) {
+		this.enemyY = enemyY;
+	}
+
+	public int getEnemySpeed() {
+		return enemySpeed;
+	}
+
+	public void setEnemySpeed(int enemySpeed) {
+		this.enemySpeed = enemySpeed;
+	}
+
 	public void connectToServer() {
 		try {
 			socket = new Socket("localhost", Server.PORT);
@@ -141,13 +176,77 @@ public class Player {
 				System.out.println("Warte auf 2. Spieler...");
 			}
 			
-			//readFromServer = new ReadFromServer(in);
-			//writeToServer = new WriteToServer(out);
+			readFromServer = new ReadFromServer(in);
+			writeToServer = new WriteToServer(out);
+			
+			Thread readThread = new Thread(readFromServer);
+			Thread writeThread = new Thread(writeToServer);
+			
+			readThread.start();
+			writeThread.start();
 
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.println("Player failed to connect to Server");
 			e.printStackTrace();
 		}
+	}
+	
+	public class WriteToServer implements Runnable{
+		
+		private ObjectOutputStream out;
+		
+		public WriteToServer(ObjectOutputStream out) {
+			this.out = out;
+			System.out.println("in constructor");
+		}
+
+		@Override
+		public void run() {
+			
+			try {
+				while(true) {
+					PlayerPositionPacket packet = new PlayerPositionPacket(playerId, x, y, speed);
+					out.writeObject(packet);
+					Thread.sleep(Server.PAUSE_DATAFLOW_TIME);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		
+
+	}
+	
+	private class ReadFromServer implements Runnable{
+		
+		private ObjectInputStream in;
+		
+		public ReadFromServer(ObjectInputStream in) {
+			this.in = in;
+		}
+
+		@Override
+		public void run() {
+			try {
+				while(true) {
+					Packet p = (Packet) in.readObject();
+					switch(p.getPacketId()) {
+						case PlayerPositionPacket.PACKET_ID:
+							PlayerPositionPacket position = (PlayerPositionPacket) p;
+							enemyX = position.getXPos();
+							enemyY = position.getYPos();
+							enemySpeed = position.getSpeed();
+							break;
+						default:
+							break;
+					}
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 	
 	

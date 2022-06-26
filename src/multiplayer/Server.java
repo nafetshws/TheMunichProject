@@ -11,6 +11,7 @@ import java.net.Socket;
 public class Server {
 	
 	public static final int PORT = 3000;
+	public static final int PAUSE_DATAFLOW_TIME = 6;
 	
 	private ServerSocket serverSocket;
 	
@@ -21,6 +22,9 @@ public class Server {
 	private ReadFromPlayer readFromP2;
 	private WriteToPlayer writeToP1;
 	private WriteToPlayer writeToP2;
+	
+	private int p1x, p1y, p2x, p2y;
+	private int p1speed, p2speed;
 
 	
 	private int maxNumberOfPlayers;
@@ -30,6 +34,14 @@ public class Server {
 	public Server(){
 		numberOfPlayers = 0;
 		maxNumberOfPlayers = 2;
+		
+		p1x = 100;
+		p1y = 300;
+		p1speed = 8;
+		
+		p2x = 600;
+		p2y = 300;
+		p2speed = 8;
 		
 		try {
 			serverSocket = new ServerSocket(PORT);
@@ -66,11 +78,19 @@ public class Server {
 					p1Socket = socket;
 					readFromP1 = rfp;
 					writeToP1 = wtp;
+					Thread readThread1 = new Thread(readFromP1);
+					Thread writeThread1 = new Thread(writeToP1);
+					readThread1.start();
+					writeThread1.start();
 				}
 				else {
 					p2Socket = socket;
 					readFromP2 = rfp;
 					writeToP2 = wtp;
+					Thread readThread2 = new Thread(readFromP2);
+					Thread writeThread2 = new Thread(writeToP2);
+					readThread2.start();
+					writeThread2.start();					
 				}
 
 				
@@ -112,7 +132,31 @@ public class Server {
 
 		@Override
 		public void run() {
-			
+			try {
+				while(true) {
+					Packet p = (Packet) in.readObject();
+					switch(p.getPacketId()) {
+						case PlayerPositionPacket.PACKET_ID:
+							PlayerPositionPacket position = (PlayerPositionPacket) p;
+							if(position.getPlayerId() == 1) {
+								p1x = position.getXPos();
+								p1y = position.getYPos();
+								p1speed = position.getSpeed();
+							}
+							else {
+								p2x = position.getXPos();
+								p2y = position.getYPos();
+								p2speed = position.getSpeed();
+							}
+							break;
+						default:
+							break;
+					}
+				}
+
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -130,7 +174,22 @@ public class Server {
 
 		@Override
 		public void run() {
-			
+			try {
+				while(true) {
+					PlayerPositionPacket position;
+					
+					if(playerId == 1) {
+						position = new PlayerPositionPacket(2, p2x, p2y, p2speed);
+					}
+					else {
+						position = new PlayerPositionPacket(2, p1x, p1y, p1speed);
+					}
+					out.writeObject(position);
+					Thread.sleep(Server.PAUSE_DATAFLOW_TIME);
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}

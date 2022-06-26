@@ -122,10 +122,15 @@ public class GamePanel extends JPanel implements Runnable {
 		if(keyHandler.getRight() == true) me.moveRight();
 		if(keyHandler.getLeft() == true) me.moveLeft();
 		
+		if(keyHandler.getUp() && !me.getIsJumping()) me.jump();
+		
 		//Updated y Position vom Spieler
 		me.updateY();
 		
-		if(keyHandler.getUp() && !me.getIsJumping()) me.jump();
+		enemy.setX(me.getEnemyX());
+		enemy.setY(me.getEnemyY());
+		enemy.setSpeed(me.getEnemySpeed());
+		
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -144,37 +149,6 @@ public class GamePanel extends JPanel implements Runnable {
 		
 	}
 	
-	private class WriteToServer implements Runnable{
-		
-		private ObjectOutputStream out;
-		
-		public WriteToServer(ObjectOutputStream out) {
-			this.out = out;
-		}
 
-		@Override
-		public void run() {
-			
-			while(true) {
-				//out.writeObject();
-			}
-		}
-
-	}
-	
-	public class ReadFromServer implements Runnable{
-		
-		private ObjectInputStream in;
-		
-		public ReadFromServer(ObjectInputStream in) {
-			this.in = in;
-		}
-
-		@Override
-		public void run() {
-
-		}
-
-	}
 		
 }
