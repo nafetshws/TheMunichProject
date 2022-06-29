@@ -21,7 +21,7 @@ public class Player {
 	
 	private int speed;
 	
-	public static final int GRAVITATIONAL_ACCELERATION = 20;
+	public static final int GRAVITATIONAL_ACCELERATION = 10;
 	private int jumpVelocity;
 	
 	private double lastTime;
@@ -80,8 +80,8 @@ public class Player {
 		// Zur Manipulation der Zeit einfach die Konstante verändern
 		double gameJumpTime = jumpTimeInSeconds * 10;
 		
-		//y(t)=0.5*g*t*t+v*t
-		y += (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime);
+		//y(t)=0.5*g*t*t+v*t+y(0)
+		y = (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime+300);
 		
 		if(y > 300) {
 			//Damit der Spieler nicht durch den Boden fällt
