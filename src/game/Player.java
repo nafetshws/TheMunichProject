@@ -16,6 +16,8 @@ import multiplayer.Packet;
 import multiplayer.PlayerAuthenticationPacket;
 import multiplayer.PlayerPositionPacket;
 import multiplayer.Server;
+import util.Character;
+import util.Direction;
 
 public class Player {
 	
@@ -34,8 +36,9 @@ public class Player {
 	
 	//speichert die Bilder als Variablen
 	private BufferedImage right1, right2, left1, left2, front;
-	private String direction="front";
-	private int character;
+	private Direction direction = Direction.Front;
+	private Character character;
+	
 	//Multiplayer
 	private Socket socket;
 	private ReadFromServer readFromServer;
@@ -43,60 +46,67 @@ public class Player {
 	
 	private int playerId;
 	
+	//Enemy
 	private int enemyX, enemyY, enemySpeed;
+	private Character enemyCharacter;
+	private Direction enemyDirection;
+	private int enemySize;
 	
 	
-	public Player(int x, int y, int character) {
+	public Player(int x, int y, Character character) {
 		this.x = x;
 		this.y = y;
-		this.size = 75;
+		this.size = 100;
 		this.speed = 8;
 		this.jumpVelocity = -25;
 		this.isJumping = false;
 		this.jumpTime = 0;	
-		this.character=character;
+		this.character = character;
+		
+		getPlayerImage();
 	}
 	
 	public void getPlayerImage() {
-		// lädt die richtigen Bilder;
-		//keine Ahnung was das try and catch macht.
+		// laedt die richtigen Bilder;
+		String defaultPath = "images/" + character.toString() + "/" + character.toString() + " ";
 		try {
-			right1=ImageIO.read(getClass().getResourceAsStream("/Player/Drache rechts 1.png"));
-			right2=ImageIO.read(getClass().getResourceAsStream("/Player/Drache rechts 2.png"));
-			left1=ImageIO.read(getClass().getResourceAsStream("/Player/Drache links 1.png"));
-			left2=ImageIO.read(getClass().getResourceAsStream("/Player/Drache links 2.png"));
-			front=ImageIO.read(getClass().getResourceAsStream("/Player/Drache vorne.png"));
-			
+			//right1 = ImageIO.read(getClass().getResourceAsStream("/game/Drache rechts 1.png"));
+			right1 = ImageIO.read(getClass().getClassLoader().getResource(defaultPath + "rechts 1.png"));
+			right2 = ImageIO.read(getClass().getClassLoader().getResource(defaultPath + "rechts 2.png"));
+			left1 = ImageIO.read(getClass().getClassLoader().getResource(defaultPath + "links 1.png"));
+			left2 = ImageIO.read(getClass().getClassLoader().getResource(defaultPath + "links 2.png"));
+			front = ImageIO.read(getClass().getClassLoader().getResource(defaultPath + "vorne.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Fehler beim Laden der Bilder!");
 		}
 	}
 	
 	public void drawPlayer(Graphics2D g2) {
+
 		BufferedImage image = null;
+		
 		switch(direction) {
-		case "right": 
-			image=right1;
-			break;
-		case "left": 
-			image=left1;
-			break;
-		case "front": 
-			image=front;
-			break;
+			case Right: 
+				image = right1;
+				break;
+			case Left: 
+				image = left1;
+				break;
+			default:
+				image = front;
+				break;
 		}
 		
-		g2.drawImage(image, x, y, 500, 500, null);
+		g2.drawImage(image, x, y, size, size, null);
 	}
 	
 	public void moveLeft() {
-		direction="left";
+		direction = Direction.Left;
 		x -= speed;
 	}
 	
 	public void moveRight() {
-		direction="right";
+		direction = Direction.Right;
 		x += speed;
 	}
 	
@@ -131,9 +141,16 @@ public class Player {
 		jumpTime = 0;
 		isJumping = true;
 		lastTime = System.nanoTime();
-		direction="front";
 	}
 	
+	public Character getCharacter() {
+		return character;
+	}
+
+	public void setCharacter(Character character) {
+		this.character = character;
+	}
+
 	public int getX() {
 		return x;
 	}
@@ -191,6 +208,16 @@ public class Player {
 	public void setEnemySpeed(int enemySpeed) {
 		this.enemySpeed = enemySpeed;
 	}
+	
+
+	public Direction getEnemyDirection() {
+		return enemyDirection;
+	}
+	
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+
 
 	public void connectToServer() {
 		try {
@@ -242,7 +269,7 @@ public class Player {
 			
 			try {
 				while(true) {
-					PlayerPositionPacket packet = new PlayerPositionPacket(playerId, x, y, speed);
+					PlayerPositionPacket packet = new PlayerPositionPacket(playerId, x, y, speed, direction);
 					out.writeObject(packet);
 					Thread.sleep(Server.PAUSE_DATAFLOW_TIME);
 				}
@@ -274,6 +301,7 @@ public class Player {
 							enemyX = position.getXPos();
 							enemyY = position.getYPos();
 							enemySpeed = position.getSpeed();
+							enemyDirection = position.getDirection();
 							break;
 						default:
 							break;

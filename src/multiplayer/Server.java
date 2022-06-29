@@ -8,6 +8,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import util.Direction;
+
 public class Server {
 	
 	public static final int PORT = 3000;
@@ -25,6 +27,7 @@ public class Server {
 	
 	private int p1x, p1y, p2x, p2y;
 	private int p1speed, p2speed;
+	private Direction p1Direction, p2Direction;
 
 	
 	private int maxNumberOfPlayers;
@@ -142,11 +145,13 @@ public class Server {
 								p1x = position.getXPos();
 								p1y = position.getYPos();
 								p1speed = position.getSpeed();
+								p1Direction = position.getDirection(); 
 							}
 							else {
 								p2x = position.getXPos();
 								p2y = position.getYPos();
 								p2speed = position.getSpeed();
+								p2Direction = position.getDirection();
 							}
 							break;
 						default:
@@ -179,10 +184,10 @@ public class Server {
 					PlayerPositionPacket position;
 					
 					if(playerId == 1) {
-						position = new PlayerPositionPacket(2, p2x, p2y, p2speed);
+						position = new PlayerPositionPacket(2, p2x, p2y, p2speed, p2Direction);
 					}
 					else {
-						position = new PlayerPositionPacket(2, p1x, p1y, p1speed);
+						position = new PlayerPositionPacket(2, p1x, p1y, p1speed, p1Direction);
 					}
 					out.writeObject(position);
 					Thread.sleep(Server.PAUSE_DATAFLOW_TIME);

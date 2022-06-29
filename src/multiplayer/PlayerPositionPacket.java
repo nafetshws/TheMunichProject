@@ -1,5 +1,7 @@
 package multiplayer;
 
+import util.Direction;
+
 public class PlayerPositionPacket extends Packet{
 
 	public static final int PACKET_ID = 2;
@@ -7,12 +9,14 @@ public class PlayerPositionPacket extends Packet{
 	private int xPos;
 	private int yPos;
 	private int speed;
+	private Direction direction;
 	
-	public PlayerPositionPacket(int id, int xPos, int yPos, int speed) {
+	public PlayerPositionPacket(int id, int xPos, int yPos, int speed, Direction direction) {
 		super(id, PACKET_ID);
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.speed = speed;
+		this.direction = direction;
 	}
 	
 	@Override
@@ -46,5 +50,15 @@ public class PlayerPositionPacket extends Packet{
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+	
+	
 
 }

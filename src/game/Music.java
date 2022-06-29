@@ -15,14 +15,13 @@ public class Music {
 	private boolean on = true; 
 	static Clip clip = null;
  
-
-
+	
   /**
    * Spielt Audiodateien als Hintergrundmusik ab, nur mit der Dateiendung .au
    *
    */
   public  Music() {
-    String musicFile = "music.wav";
+    String musicFile = "res/music/music.wav";
       try {
 
         clip = AudioSystem.getClip();
@@ -49,7 +48,10 @@ public class Music {
   /** startet die Musik in Endlosschleife */
   public  void start() {
 	  on= true;
-    if (clip != null) clip.loop(Clip.LOOP_CONTINUOUSLY);
+    if (clip != null) {
+    	clip.loop(Clip.LOOP_CONTINUOUSLY);
+    	System.out.println("MUsik gestartet");
+    }
     
   }
   

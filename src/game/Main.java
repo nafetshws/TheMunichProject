@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import multiplayer.Server;
 import ui.MainWindow;
+import util.Character;
 
 public class Main {
 	
@@ -11,8 +12,8 @@ public class Main {
 		
 		//Um die Applikation ausführen zu können, muss man vorher Server.java ausführen
 		
-		Player player1 = new Player(100, 300, 1);
-		Player player2 = new Player(600, 300, 1);
+		Player player1 = new Player(100, 300, Character.Drache);
+		Player player2 = new Player(600, 300, Character.Jason);
 		
 		player1.connectToServer();
 		player2.connectToServer();

@@ -9,6 +9,8 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.JPanel;
 
+import util.Character;
+
 
 public class GamePanel extends JPanel implements Runnable {
 	
@@ -34,10 +36,10 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		this.me = me;
 		if(me.getPlayerId() == 1) {
-			enemy = new Player(600, 300, 1);
+			enemy = new Player(600, 300, Character.Medea);
 		}
 		else {
-			enemy = new Player(100, 300, 1);
+			enemy = new Player(100, 300, Character.Medea);
 		}
 		
 		os = System.getProperty("os.name");
@@ -131,6 +133,7 @@ public class GamePanel extends JPanel implements Runnable {
 		enemy.setX(me.getEnemyX());
 		enemy.setY(me.getEnemyY());
 		enemy.setSpeed(me.getEnemySpeed());
+		enemy.setDirection(me.getEnemyDirection());
 		
 	}
 	
