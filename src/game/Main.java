@@ -10,7 +10,10 @@ public class Main {
 	
 	public static void main(String[] args){
 		
-		//Um die Applikation ausführen zu können, muss man vorher Server.java ausführen
+		//Erstellen eines ServerThreads der im Hintergrund laeuft
+		Server server = new Server();
+		Thread serverThread = new Thread(server);
+		serverThread.start();
 		
 		Player player1 = new Player(100, 300, Character.Drache);
 		Player player2 = new Player(600, 300, Character.Jason);

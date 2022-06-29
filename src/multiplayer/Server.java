@@ -11,7 +11,7 @@ import java.net.Socket;
 import util.Character;
 import util.Direction;
 
-public class Server {
+public class Server implements Runnable{
 	
 	public static final int PORT = 3000;
 	public static final int PAUSE_DATAFLOW_TIME = 6;
@@ -53,6 +53,12 @@ public class Server {
 			System.out.println("Fehler beim Erstellen des GameServerSockets");
 			e.printStackTrace();
 		}
+	}
+	
+
+	@Override
+	public void run() {
+		waitForConnections();
 	}
 	
 	public void waitForConnections() {
@@ -203,7 +209,6 @@ public class Server {
 				while(true) {
 					
 					if(numberOfPlayers == 2 && !initializedData && p1Character != null && p2Character != null) {
-						System.out.println("Sending init package");
 						InitializationPacket initPacket;
 						if(playerId == 1) {
 							initPacket = new InitializationPacket(playerId, p2x, p2y, p2speed, p2Direction, p2Character);
@@ -231,5 +236,6 @@ public class Server {
 		}
 
 	}
+
 
 }

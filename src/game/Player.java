@@ -312,7 +312,6 @@ public class Player {
 							enemySpeed = enemyInformation.getSpeed();
 							enemyDirection = enemyInformation.getDirection();
 							enemyCharacter = enemyInformation.getCharacter();
-							System.out.println("Received enemy information: " + enemyCharacter);
 							break;
 						case PlayerPositionPacket.PACKET_ID:
 							PlayerPositionPacket position = (PlayerPositionPacket) p;
