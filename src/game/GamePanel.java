@@ -34,10 +34,10 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		this.me = me;
 		if(me.getPlayerId() == 1) {
-			enemy = new Player(600, 300, Color.red);
+			enemy = new Player(600, 300, 1);
 		}
 		else {
-			enemy = new Player(100, 300, Color.black);
+			enemy = new Player(100, 300, 1);
 		}
 		
 		os = System.getProperty("os.name");
@@ -123,6 +123,7 @@ public class GamePanel extends JPanel implements Runnable {
 		if(keyHandler.getLeft() == true) me.moveLeft();
 		
 		if(keyHandler.getUp() && !me.getIsJumping()) me.jump();
+		
 		
 		//Updated y Position vom Spieler
 		me.updateY();

@@ -2,12 +2,15 @@ package game;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+
+import javax.imageio.ImageIO;
 
 import multiplayer.Packet;
 import multiplayer.PlayerAuthenticationPacket;
@@ -17,7 +20,6 @@ import multiplayer.Server;
 public class Player {
 	
 	private int x, y, size;
-	private Color color;
 	
 	private int speed;
 	
@@ -30,6 +32,10 @@ public class Player {
 	private double jumpTime;
 	private double s2ns = Math.pow(10, 9);
 	
+	//speichert die Bilder als Variablen
+	private BufferedImage right1, right2, left1, left2, front;
+	private String direction="front";
+	private int character;
 	//Multiplayer
 	private Socket socket;
 	private ReadFromServer readFromServer;
@@ -40,27 +46,57 @@ public class Player {
 	private int enemyX, enemyY, enemySpeed;
 	
 	
-	public Player(int x, int y, Color color) {
+	public Player(int x, int y, int character) {
 		this.x = x;
 		this.y = y;
-		this.color = color;
 		this.size = 75;
 		this.speed = 8;
 		this.jumpVelocity = -25;
 		this.isJumping = false;
 		this.jumpTime = 0;	
+		this.character=character;
+	}
+	
+	public void getPlayerImage() {
+		// lädt die richtigen Bilder;
+		//keine Ahnung was das try and catch macht.
+		try {
+			right1=ImageIO.read(getClass().getResourceAsStream("/Player/Drache rechts 1.png"));
+			right2=ImageIO.read(getClass().getResourceAsStream("/Player/Drache rechts 2.png"));
+			left1=ImageIO.read(getClass().getResourceAsStream("/Player/Drache links 1.png"));
+			left2=ImageIO.read(getClass().getResourceAsStream("/Player/Drache links 2.png"));
+			front=ImageIO.read(getClass().getResourceAsStream("/Player/Drache vorne.png"));
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void drawPlayer(Graphics2D g2) {
-		g2.setColor(color);
-		g2.fillRect(x, y, size, size);
+		BufferedImage image = null;
+		switch(direction) {
+		case "right": 
+			image=right1;
+			break;
+		case "left": 
+			image=left1;
+			break;
+		case "front": 
+			image=front;
+			break;
+		}
+		
+		g2.drawImage(image, x, y, 500, 500, null);
 	}
 	
 	public void moveLeft() {
+		direction="left";
 		x -= speed;
 	}
 	
 	public void moveRight() {
+		direction="right";
 		x += speed;
 	}
 	
@@ -95,6 +131,7 @@ public class Player {
 		jumpTime = 0;
 		isJumping = true;
 		lastTime = System.nanoTime();
+		direction="front";
 	}
 	
 	public int getX() {

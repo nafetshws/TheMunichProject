@@ -11,8 +11,8 @@ public class Main {
 		
 		//Um die Applikation ausführen zu können, muss man vorher Server.java ausführen
 		
-		Player player1 = new Player(100, 300, Color.black);
-		Player player2 = new Player(600, 300, Color.red);
+		Player player1 = new Player(100, 300, 1);
+		Player player2 = new Player(600, 300, 1);
 		
 		player1.connectToServer();
 		player2.connectToServer();
