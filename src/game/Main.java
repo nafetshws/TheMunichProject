@@ -8,7 +8,7 @@ import util.Character;
 
 public class Main {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args){
 		
 		//Um die Applikation ausführen zu können, muss man vorher Server.java ausführen
 		
@@ -17,6 +17,7 @@ public class Main {
 		
 		player1.connectToServer();
 		player2.connectToServer();
+	
 		
 		MainWindow player1Window = new MainWindow(720, 480, player1);
 		MainWindow player2Window = new MainWindow(720, 480, player2);

@@ -35,12 +35,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public GamePanel(Player me) {
 		
 		this.me = me;
-		if(me.getPlayerId() == 1) {
-			enemy = new Player(600, 300, Character.Medea);
-		}
-		else {
-			enemy = new Player(100, 300, Character.Medea);
-		}
+		this.enemy = new Player(me.getEnemyX(), me.getEnemyY(), me.getEnemyCharacter());
 		
 		os = System.getProperty("os.name");
 		

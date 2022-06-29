@@ -12,6 +12,7 @@ import java.net.Socket;
 
 import javax.imageio.ImageIO;
 
+import multiplayer.InitializationPacket;
 import multiplayer.Packet;
 import multiplayer.PlayerAuthenticationPacket;
 import multiplayer.PlayerPositionPacket;
@@ -218,6 +219,9 @@ public class Player {
 		this.direction = direction;
 	}
 
+	public Character getEnemyCharacter() {
+		return enemyCharacter;
+	}
 
 	public void connectToServer() {
 		try {
@@ -268,6 +272,11 @@ public class Player {
 		public void run() {
 			
 			try {
+				
+				//Sende essentielle Information ueber den Spieler zum Server
+				InitializationPacket initPacket = new InitializationPacket(playerId, x, y, speed, direction, character);
+				out.writeObject(initPacket);
+				
 				while(true) {
 					PlayerPositionPacket packet = new PlayerPositionPacket(playerId, x, y, speed, direction);
 					out.writeObject(packet);
@@ -296,6 +305,15 @@ public class Player {
 				while(true) {
 					Packet p = (Packet) in.readObject();
 					switch(p.getPacketId()) {
+						case InitializationPacket.PACKET_ID:
+							InitializationPacket enemyInformation = (InitializationPacket) p;
+							enemyX = enemyInformation.getXPos();
+							enemyY = enemyInformation.getYPos();
+							enemySpeed = enemyInformation.getSpeed();
+							enemyDirection = enemyInformation.getDirection();
+							enemyCharacter = enemyInformation.getCharacter();
+							System.out.println("Received enemy information: " + enemyCharacter);
+							break;
 						case PlayerPositionPacket.PACKET_ID:
 							PlayerPositionPacket position = (PlayerPositionPacket) p;
 							enemyX = position.getXPos();

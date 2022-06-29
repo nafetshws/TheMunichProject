@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import util.Character;
 import util.Direction;
 
 public class Server {
@@ -28,11 +29,11 @@ public class Server {
 	private int p1x, p1y, p2x, p2y;
 	private int p1speed, p2speed;
 	private Direction p1Direction, p2Direction;
+	private Character p1Character, p2Character;
 
 	
 	private int maxNumberOfPlayers;
 	private int numberOfPlayers;
-
 	
 	public Server(){
 		numberOfPlayers = 0;
@@ -136,9 +137,27 @@ public class Server {
 		@Override
 		public void run() {
 			try {
+				
 				while(true) {
 					Packet p = (Packet) in.readObject();
 					switch(p.getPacketId()) {
+						case InitializationPacket.PACKET_ID:
+							InitializationPacket init = (InitializationPacket) p;
+							if(init.getPlayerId() == 1) {
+								p1x = init.getXPos();
+								p1y = init.getYPos();
+								p1speed = init.getSpeed();
+								p1Direction = init.getDirection();
+								p1Character = init.getCharacter();
+							}
+							else {
+								p2x = init.getXPos();
+								p2y = init.getYPos();
+								p2speed = init.getSpeed();
+								p2Direction = init.getDirection();
+								p2Character = init.getCharacter();
+							}
+							break;
 						case PlayerPositionPacket.PACKET_ID:
 							PlayerPositionPacket position = (PlayerPositionPacket) p;
 							if(position.getPlayerId() == 1) {
@@ -170,6 +189,7 @@ public class Server {
 		
 		private int playerId;
 		private ObjectOutputStream out;
+		private boolean initializedData = false;
 		
 		public WriteToPlayer(int playerId, ObjectOutputStream out) {
 			this.playerId = playerId;
@@ -181,6 +201,19 @@ public class Server {
 		public void run() {
 			try {
 				while(true) {
+					
+					if(numberOfPlayers == 2 && !initializedData && p1Character != null && p2Character != null) {
+						System.out.println("Sending init package");
+						InitializationPacket initPacket;
+						if(playerId == 1) {
+							initPacket = new InitializationPacket(playerId, p2x, p2y, p2speed, p2Direction, p2Character);
+						}else {
+							initPacket = new InitializationPacket(playerId, p1x, p1y, p1speed, p1Direction, p1Character);
+						}
+						out.writeObject(initPacket);
+						initializedData = true;
+					}
+					
 					PlayerPositionPacket position;
 					
 					if(playerId == 1) {
