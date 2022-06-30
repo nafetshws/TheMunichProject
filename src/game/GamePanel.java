@@ -6,10 +6,16 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
+import ui.CreateGameScreen;
+import ui.GameScreen;
+import ui.Screen;
 import util.Character;
+import util.State;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -20,8 +26,6 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	//frames per second
 	private int FPS = 60;
-	
-	private boolean isJumping;
 
 	//Thread ist die Zeit
 	private Thread gameThread;
@@ -30,6 +34,10 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public Player me;
 	public Player enemy;
+	
+	public State state = State.Running;
+	private Map<State, Screen> screens = new HashMap<>();
+	private Screen currentScreen;
 	
 	
 	public GamePanel(Player me) {
@@ -46,6 +54,14 @@ public class GamePanel extends JPanel implements Runnable {
 		 
 		this.addKeyListener(keyHandler);
 		this.setFocusable(true);
+		
+		CreateGameScreen createGameScreen = new CreateGameScreen();
+		GameScreen gameScreen = new GameScreen(keyHandler, me, enemy);
+		
+		screens.put(State.CreateGame, createGameScreen);
+		screens.put(State.Running, gameScreen);
+		
+		currentScreen = screens.get(state);
 		
 	}
 	 
@@ -112,27 +128,35 @@ public class GamePanel extends JPanel implements Runnable {
 			
 		}
 	}
+	
+	public Screen updateCurrentScreen() {
+		switch(state) {
+			case Running:
+				currentScreen = screens.get(State.Running);
+				break;
+			case Start:
+				currentScreen = screens.get(State.Start);
+				break;
+			case Pause:
+				currentScreen = screens.get(State.Pause);
+				break;
+			case CreateGame:
+				currentScreen = screens.get(State.CreateGame);
+				break;
+			default:
+				System.out.println("Etwas ist falsch mit dem Statemanagement");
+				//fuer compiler
+				currentScreen = screens.get(State.Start);
+				break;
+		}
+		
+		return currentScreen;
+	}
 
 	
 	public void update() {
-		//Bewegung der Spieler auf der X-Achse
-		//wenn keine Bewegung nach rechts oder links passiert, dann wir die Direction auf front gestellt
-		if(keyHandler.getRight() == true) me.moveRight();
-		else if(keyHandler.getLeft() == true) me.moveLeft();
-		else me.dontmove();
-		
-		
-		if(keyHandler.getUp() && !me.getIsJumping()) me.jump();
-		
-		
-		//Updated y Position vom Spieler
-		me.updateY();
-		
-		enemy.setX(me.getEnemyX());
-		enemy.setY(me.getEnemyY());
-		enemy.setSpeed(me.getEnemySpeed());
-		enemy.setDirection(me.getEnemyDirection());
-		
+		updateCurrentScreen();
+		currentScreen.update();
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -142,9 +166,7 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		Graphics2D g2 = (Graphics2D) g;
 		
-		//Zeichnet Spieler am Screen
-		me.drawPlayer((Graphics2D) g);
-		enemy.drawPlayer((Graphics2D) g);
+		currentScreen.draw(g2);
 		
 		//Alles was hinter dispose steht wird nicht mehr gerendert
 		g2.dispose();
