@@ -55,8 +55,8 @@ public class GamePanel extends JPanel implements Runnable {
 		this.addKeyListener(keyHandler);
 		this.setFocusable(true);
 		
-		CreateGameScreen createGameScreen = new CreateGameScreen();
-		GameScreen gameScreen = new GameScreen(keyHandler, me, enemy);
+		CreateGameScreen createGameScreen = new CreateGameScreen(this);
+		GameScreen gameScreen = new GameScreen(this, keyHandler, me, enemy);
 		
 		screens.put(State.CreateGame, createGameScreen);
 		screens.put(State.Running, gameScreen);

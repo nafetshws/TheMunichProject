@@ -137,7 +137,6 @@ public class Server implements Runnable{
 		public ReadFromPlayer(int playerId, ObjectInputStream in) {
 			this.playerId = playerId;
 			this.in = in;
-			System.out.println("Server input stream erstellt für Spieler #" + playerId);
 		}
 
 		@Override
@@ -200,7 +199,6 @@ public class Server implements Runnable{
 		public WriteToPlayer(int playerId, ObjectOutputStream out) {
 			this.playerId = playerId;
 			this.out = out;
-			System.out.println("Server out stream erstellt für Spieler #" + playerId);
 		}
 
 		@Override

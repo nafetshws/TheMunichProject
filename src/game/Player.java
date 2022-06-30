@@ -111,7 +111,7 @@ public class Player {
 		x += speed;
 	}
 	
-	public void dontmove() {
+	public void dontMove() {
 		direction = Direction.Front;
 	}
 	
@@ -269,7 +269,6 @@ public class Player {
 		
 		public WriteToServer(ObjectOutputStream out) {
 			this.out = out;
-			System.out.println("in constructor");
 		}
 
 		@Override
