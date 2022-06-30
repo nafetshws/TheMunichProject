@@ -26,7 +26,7 @@ public class Player {
 	
 	private int speed;
 	
-	public static final int GRAVITATIONAL_ACCELERATION = 10;
+	public static final int GRAVITATIONAL_ACCELERATION = 15;
 	private int jumpVelocity;
 	
 	private double lastTime;
@@ -59,7 +59,7 @@ public class Player {
 		this.y = y;
 		this.size = 100;
 		this.speed = 8;
-		this.jumpVelocity = -25;
+		this.jumpVelocity = -50;
 		this.isJumping = false;
 		this.jumpTime = 0;	
 		this.character = character;
@@ -109,6 +109,10 @@ public class Player {
 	public void moveRight() {
 		direction = Direction.Right;
 		x += speed;
+	}
+	
+	public void dontmove() {
+		direction = Direction.Front;
 	}
 	
 	public void updateY() {

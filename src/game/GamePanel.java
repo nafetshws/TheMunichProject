@@ -116,8 +116,11 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public void update() {
 		//Bewegung der Spieler auf der X-Achse
+		//wenn keine Bewegung nach rechts oder links passiert, dann wir die Direction auf front gestellt
 		if(keyHandler.getRight() == true) me.moveRight();
-		if(keyHandler.getLeft() == true) me.moveLeft();
+		else if(keyHandler.getLeft() == true) me.moveLeft();
+		else me.dontmove();
+		
 		
 		if(keyHandler.getUp() && !me.getIsJumping()) me.jump();
 		
