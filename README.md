@@ -1,7 +1,7 @@
 # TheMunichProject
 
 ### Wie startet man das Spiel
-Um das Spiel zu starten muss man zuerst die Javadatei: "src/multiplayer/Server.java" ausführen. Diese erstellt den Server und darf nicht geschlossen werden. Im Anschluss führt man "src/game/Main.java" aus.
+Um das Spiel zu starten muss man "src/game/Main.java" ausführen.
 
 #### Grundidee
 
