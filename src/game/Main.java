@@ -16,14 +16,19 @@ public class Main {
 		serverThread.start();
 		
 		Player player1 = new Player(100, 300, Character.Drache);
-		Player player2 = new Player(600, 300, Character.Jason);
+		Player player2 = new Player(200, 300, Character.Jason);
 		
-		player1.connectToServer();
-		player2.connectToServer();
+		Player player3 = new Player(500, 300, Character.Medea);
+		Player player4 = new Player(600, 300, Character.Koenig);
+		
+		Team team1 = new Team(player1, player2);
+		Team team2 = new Team(player3, player4);
+		
+		team1.connectToServer();
+		team2.connectToServer();
 	
-		
-		MainWindow player1Window = new MainWindow(720, 480, player1);
-		MainWindow player2Window = new MainWindow(720, 480, player2);
+		MainWindow team1Window = new MainWindow(720, 480, team1);
+		MainWindow team2Window = new MainWindow(720, 480, team2);
 		
 	}
 	

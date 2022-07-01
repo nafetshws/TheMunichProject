@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import game.GamePanel;
 import game.Player;
+import game.Team;
 
 import java.awt.*;
 
@@ -14,8 +15,8 @@ public class MainWindow {
 	
 	public GamePanel gamePanel;
     
-    public MainWindow(int width, int height, Player me) {
-        JFrame frame = new JFrame("Spieler #" + me.getPlayerId());
+    public MainWindow(int width, int height, Team me) {
+        JFrame frame = new JFrame("Team #" + me.getPlayer1().getPlayerId());
         gamePanel = new GamePanel(me);
         
         //Damit das Spiel richtig schließt

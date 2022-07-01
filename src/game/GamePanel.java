@@ -32,18 +32,18 @@ public class GamePanel extends JPanel implements Runnable {
 	// verwaltet die Tastenangabe
 	private KeyHandler keyHandler = new KeyHandler();
 	
-	public Player me;
-	public Player enemy;
+	private Team me;
+	private Team enemyTeam;
 	
 	public State state = State.Running;
 	private Map<State, Screen> screens = new HashMap<>();
 	private Screen currentScreen;
 	
 	
-	public GamePanel(Player me) {
+	public GamePanel(Team me) {
 		
 		this.me = me;
-		this.enemy = new Player(me.getEnemyX(), me.getEnemyY(), me.getEnemyCharacter());
+		this.enemyTeam = new Team(me.getEnemy1(), me.getEnemy2());
 		
 		os = System.getProperty("os.name");
 		
@@ -56,7 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
 		this.setFocusable(true);
 		
 		CreateGameScreen createGameScreen = new CreateGameScreen(this);
-		GameScreen gameScreen = new GameScreen(this, keyHandler, me, enemy);
+		GameScreen gameScreen = new GameScreen(this, keyHandler, me, enemyTeam);
 		
 		screens.put(State.CreateGame, createGameScreen);
 		screens.put(State.Running, gameScreen);

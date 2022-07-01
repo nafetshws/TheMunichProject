@@ -1,5 +1,6 @@
 package multiplayer;
 
+import game.Player;
 import util.Character;
 import util.Direction;
 
@@ -8,41 +9,21 @@ public class InitializationPacket extends Packet{
 	public static final int PACKET_ID = 7;
 	
 	//position
-	private int xPos;
-	private int yPos;
-	private int speed;
-	private Direction direction;
-	
-	//Charackter
-	Character character;
+	Player player1;
+	Player player2;
 
-	public InitializationPacket(int playerId, int xPos, int yPos, int speed, Direction direction, Character character) {
+	public InitializationPacket(int playerId, Player player1, Player player2) {
 		super(playerId, PACKET_ID);
-		this.xPos = xPos;
-		this.yPos = yPos;
-		this.speed = speed;
-		this.direction = direction;
-		this.character = character;
+		this.player1 = player1;
+		this.player2 = player2;
 	}
 
-	public int getXPos() {
-		return xPos;
+	public Player getPlayer1() {
+		return player1;
 	}
 
-	public int getYPos() {
-		return yPos;
-	}
-
-	public int getSpeed() {
-		return speed;
-	}
-
-	public Direction getDirection() {
-		return direction;
-	}
-
-	public Character getCharacter() {
-		return character;
+	public Player getPlayer2() {
+		return player2;
 	}
 	
 }

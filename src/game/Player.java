@@ -8,19 +8,20 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 
 import javax.imageio.ImageIO;
 
 import multiplayer.InitializationPacket;
 import multiplayer.Packet;
-import multiplayer.PlayerAuthenticationPacket;
-import multiplayer.PlayerPositionPacket;
+import multiplayer.TeamAuthenticationPacket;
+import multiplayer.TeamPositionPacket;
 import multiplayer.Server;
 import util.Character;
 import util.Direction;
 
-public class Player {
+public class Player{
 	
 	private int x, y, size;
 	
@@ -35,25 +36,13 @@ public class Player {
 	private double jumpTime;
 	private double s2ns = Math.pow(10, 9);
 	
-	//speichert die Bilder als Variablen
-	private BufferedImage right1, right2, left1, left2, front;
+	//speichert die Bilder als Variablen (transient ist notwendig, damit die Klasse Player ueber das Netzwerk gesendet werden kann
+	private transient BufferedImage right1, right2, left1, left2, front;
 	private int imageCounter =  0;
 	private Direction direction = Direction.Front;
 	private Character character;
 	
-	//Multiplayer
-	private Socket socket;
-	private ReadFromServer readFromServer;
-	private WriteToServer writeToServer;
-	
 	private int playerId;
-	
-	//Enemy
-	private int enemyX, enemyY, enemySpeed;
-	private Character enemyCharacter;
-	private Direction enemyDirection;
-	private int enemySize;
-	
 	
 	public Player(int x, int y, Character character) {
 		this.x = x;
@@ -65,10 +54,23 @@ public class Player {
 		this.jumpTime = 0;	
 		this.character = character;
 		
-		getPlayerImage();
+		loadPlayerImage();
 	}
 	
-	public void getPlayerImage() {
+	public Player() {
+		this.x = 0;
+		this.y = 0;
+		this.size = 100;
+		this.speed = 6;
+		this.jumpVelocity = -50;
+		this.isJumping = false;
+		this.jumpTime = 0;	
+		this.character = Character.Drache;
+		
+		loadPlayerImage();
+	}
+	
+	public void loadPlayerImage() {
 		// laedt die richtigen Bilder;
 		String defaultPath = "images/" + character.toString() + "/" + character.toString() + " ";
 		try {
@@ -85,9 +87,11 @@ public class Player {
 	
 	public void drawPlayer(Graphics2D g2) {
 		
-		imageCounter++;	
 		BufferedImage image = null;
-		if(imageCounter>10) {
+		
+		imageCounter++;
+		
+		if(imageCounter > 10) {
 			switch(direction) {
 				case Right: 
 					image = right1;
@@ -114,7 +118,8 @@ public class Player {
 				}
 			}
 		
-		if(imageCounter>20) {imageCounter=0;}
+		if(imageCounter > 20) imageCounter=0;
+		
 		g2.drawImage(image, x, y, size, size, null);
 	}
 	
@@ -149,7 +154,7 @@ public class Player {
 		double gameJumpTime = jumpTimeInSeconds * 10;
 		
 		//y(t)=0.5*g*t*t+v*t+y(0)
-		y = (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime+300);
+		y = (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime + 300);
 		
 		if(y > 300) {
 			//Damit der Spieler nicht durch den Boden fällt
@@ -171,6 +176,7 @@ public class Player {
 
 	public void setCharacter(Character character) {
 		this.character = character;
+		loadPlayerImage();
 	}
 
 	public int getX() {
@@ -205,152 +211,17 @@ public class Player {
 		return playerId;
 	}
 	
-	//Multiplayer
-	
-	public int getEnemyX() {
-		return enemyX;
+	public void setPlayerId(int playerId) {
+		this.playerId = playerId;
 	}
 
-	public void setEnemyX(int enemyX) {
-		this.enemyX = enemyX;
+	public Direction getDirection() {
+		return direction;
 	}
 
-	public int getEnemyY() {
-		return enemyY;
-	}
-
-	public void setEnemyY(int enemyY) {
-		this.enemyY = enemyY;
-	}
-
-	public int getEnemySpeed() {
-		return enemySpeed;
-	}
-
-	public void setEnemySpeed(int enemySpeed) {
-		this.enemySpeed = enemySpeed;
-	}
-	
-
-	public Direction getEnemyDirection() {
-		return enemyDirection;
-	}
-	
 	public void setDirection(Direction direction) {
 		this.direction = direction;
 	}
-
-	public Character getEnemyCharacter() {
-		return enemyCharacter;
-	}
-
-	public void connectToServer() {
-		try {
-			socket = new Socket("localhost", Server.PORT);
-			
-			
-			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-			
-			Packet packet = (Packet) in.readObject();
-			if (packet.getPacketId() == PlayerAuthenticationPacket.PACKET_ID) {
-				PlayerAuthenticationPacket auth = (PlayerAuthenticationPacket) packet;
-				playerId = auth.getPlayerId();
-			}
-			else {
-				System.out.println("Failed to authenticate!");
-			}
-			
-			if(playerId == 1) {
-				System.out.println("Warte auf 2. Spieler...");
-			}
-			
-			readFromServer = new ReadFromServer(in);
-			writeToServer = new WriteToServer(out);
-			
-			Thread readThread = new Thread(readFromServer);
-			Thread writeThread = new Thread(writeToServer);
-			
-			readThread.start();
-			writeThread.start();
-
-		} catch (IOException | ClassNotFoundException e) {
-			System.out.println("Player failed to connect to Server");
-			e.printStackTrace();
-		}
-	}
-	
-	public class WriteToServer implements Runnable{
-		
-		private ObjectOutputStream out;
-		
-		public WriteToServer(ObjectOutputStream out) {
-			this.out = out;
-		}
-
-		@Override
-		public void run() {
-			
-			try {
-				
-				//Sende essentielle Information ueber den Spieler zum Server
-				InitializationPacket initPacket = new InitializationPacket(playerId, x, y, speed, direction, character);
-				out.writeObject(initPacket);
-				
-				while(true) {
-					PlayerPositionPacket packet = new PlayerPositionPacket(playerId, x, y, speed, direction);
-					out.writeObject(packet);
-					Thread.sleep(Server.PAUSE_DATAFLOW_TIME);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
-		
-
-	}
-	
-	private class ReadFromServer implements Runnable{
-		
-		private ObjectInputStream in;
-		
-		public ReadFromServer(ObjectInputStream in) {
-			this.in = in;
-		}
-
-		@Override
-		public void run() {
-			try {
-				while(true) {
-					Packet p = (Packet) in.readObject();
-					switch(p.getPacketId()) {
-						case InitializationPacket.PACKET_ID:
-							InitializationPacket enemyInformation = (InitializationPacket) p;
-							enemyX = enemyInformation.getXPos();
-							enemyY = enemyInformation.getYPos();
-							enemySpeed = enemyInformation.getSpeed();
-							enemyDirection = enemyInformation.getDirection();
-							enemyCharacter = enemyInformation.getCharacter();
-							break;
-						case PlayerPositionPacket.PACKET_ID:
-							PlayerPositionPacket position = (PlayerPositionPacket) p;
-							enemyX = position.getXPos();
-							enemyY = position.getYPos();
-							enemySpeed = position.getSpeed();
-							enemyDirection = position.getDirection();
-							break;
-						default:
-							break;
-					}
-				}
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-	
 	
 }
 

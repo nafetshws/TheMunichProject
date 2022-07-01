@@ -4,20 +4,20 @@ import java.io.Serializable;
 
 public class Packet implements Serializable{
 	
-	private int playerId;
+	private int senderId;
 	private final int PACKET_ID;
 	
-	public Packet(int playerId, int PACKET_ID) {
-		this.playerId = playerId;
+	public Packet(int senderId, int PACKET_ID) {
+		this.senderId = senderId;
 		this.PACKET_ID = PACKET_ID;
 	}
 	
-	public int getPlayerId() {
-		return playerId;
+	public int getSenderId() {
+		return senderId;
 	}
 
 	public void prettyPrintData() {
-		System.out.println("Sender: Player " + playerId);
+		System.out.println("Sender: Player " + senderId);
 		System.out.println();
 	}
 	

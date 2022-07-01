@@ -9,7 +9,11 @@ public class KeyHandler implements KeyListener{
 	private boolean down;
 	private boolean right;
 	private boolean left;
-	private Character character;
+	
+	private boolean upArrow;
+	private boolean downArrow;
+	private boolean rightArrow;
+	private boolean leftArrow;
 
 	@Override
 	public void keyTyped(KeyEvent e) {}
@@ -18,6 +22,7 @@ public class KeyHandler implements KeyListener{
 	public void keyPressed(KeyEvent e) {
 		int code = e.getKeyCode();
 		
+		//Player 1
 		if(code == KeyEvent.VK_W) {
 			up = true;
 		}
@@ -31,6 +36,19 @@ public class KeyHandler implements KeyListener{
 			left = true;
 		}
 		
+		//Player 2
+		if(code == KeyEvent.VK_UP) {
+			upArrow = true;
+		}
+		if(code == KeyEvent.VK_DOWN) {
+			downArrow = true;
+		}
+		if(code == KeyEvent.VK_RIGHT) {
+			rightArrow = true;
+		}
+		if(code == KeyEvent.VK_LEFT) {
+			leftArrow = true;
+		}
 	}
 
 	@Override
@@ -50,6 +68,19 @@ public class KeyHandler implements KeyListener{
 			left=false;
 		}
 		
+		if(code == KeyEvent.VK_UP) {
+			upArrow = false;
+		}
+		if(code == KeyEvent.VK_DOWN) {
+			downArrow = false;
+		}
+		if(code == KeyEvent.VK_RIGHT) {
+			rightArrow = false;
+		}
+		if(code == KeyEvent.VK_LEFT) {
+			leftArrow = false;
+		}
+		
 	}
 	
 	public boolean getUp() {
@@ -66,6 +97,24 @@ public class KeyHandler implements KeyListener{
 	
 	public boolean getRight() {
 		return right;
+	}
+
+	//Player 2
+	
+	public boolean isUpArrow() {
+		return upArrow;
+	}
+
+	public boolean isDownArrow() {
+		return downArrow;
+	}
+
+	public boolean isRightArrow() {
+		return rightArrow;
+	}
+
+	public boolean isLeftArrow() {
+		return leftArrow;
 	}
 	
 }
