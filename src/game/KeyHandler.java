@@ -9,6 +9,7 @@ public class KeyHandler implements KeyListener{
 	private boolean down;
 	private boolean right;
 	private boolean left;
+	private Character character;
 
 	@Override
 	public void keyTyped(KeyEvent e) {}

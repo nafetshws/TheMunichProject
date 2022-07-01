@@ -37,6 +37,7 @@ public class Player {
 	
 	//speichert die Bilder als Variablen
 	private BufferedImage right1, right2, left1, left2, front;
+	private int imageCounter =  0;
 	private Direction direction = Direction.Front;
 	private Character character;
 	
@@ -58,7 +59,7 @@ public class Player {
 		this.x = x;
 		this.y = y;
 		this.size = 100;
-		this.speed = 8;
+		this.speed = 6;
 		this.jumpVelocity = -50;
 		this.isJumping = false;
 		this.jumpTime = 0;	
@@ -83,21 +84,37 @@ public class Player {
 	}
 	
 	public void drawPlayer(Graphics2D g2) {
-
+		
+		imageCounter++;	
 		BufferedImage image = null;
+		if(imageCounter>10) {
+			switch(direction) {
+				case Right: 
+					image = right1;
+					break;
+				case Left: 
+					image = left1;
+					break;
+				default:
+					image = front;
+					break;
+			}
+			}
+			else {
+				switch(direction) {
+				case Right: 
+					image = right2;
+					break;
+				case Left: 
+					image = left2;
+					break;
+				default:
+					image = front;
+					break;
+				}
+			}
 		
-		switch(direction) {
-			case Right: 
-				image = right1;
-				break;
-			case Left: 
-				image = left1;
-				break;
-			default:
-				image = front;
-				break;
-		}
-		
+		if(imageCounter>20) {imageCounter=0;}
 		g2.drawImage(image, x, y, size, size, null);
 	}
 	
