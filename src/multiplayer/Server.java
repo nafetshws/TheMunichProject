@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import game.Player;
 import game.Team;
 import util.Character;
 import util.Direction;
@@ -142,44 +143,64 @@ public class Server implements Runnable {
 				while (true) {
 					Packet p = (Packet) in.readObject();
 					switch (p.getPacketId()) {
-					case InitializationPacket.PACKET_ID:
-						InitializationPacket initPacket = (InitializationPacket) p;
-						if (initPacket.getSenderId() == 1) {
-							// Team 1
-							team1 = new Team(initPacket.getPlayer1(), initPacket.getPlayer2());
-							System.out.println("Initialized team 1");
-						} else {
-							// Team 2
-							team2 = new Team(initPacket.getPlayer1(), initPacket.getPlayer2());
-							System.out.println("Initialized team 2");
-						}
-						break;
-					case TeamPositionPacket.PACKET_ID:
-						TeamPositionPacket positionPacket = (TeamPositionPacket) p;
-						//System.out.println("Received position packet");
-						//System.out.println("Y: " + positionPacket.getPlayer1().getX());
-						if(positionPacket.getSenderId() == 1) {
-							team1.getPlayer1().setX(positionPacket.getPlayer1().getX());
-							team1.getPlayer1().setY(positionPacket.getPlayer1().getY());
-							team1.getPlayer1().setSpeed(positionPacket.getPlayer1().getSpeed());
-							team1.getPlayer1().setDirection(positionPacket.getPlayer1().getDirection());
+						case InitializationPacket.PACKET_ID:
+							InitializationPacket initPacket = (InitializationPacket) p;
 							
-							team1.getPlayer2().setX(positionPacket.getPlayer2().getX());
-							team1.getPlayer2().setY(positionPacket.getPlayer2().getY());
-							team1.getPlayer2().setSpeed(positionPacket.getPlayer2().getSpeed());
-							team1.getPlayer2().setDirection(positionPacket.getPlayer2().getDirection());
-						}
-						else {
-							team2.getPlayer1().setX(positionPacket.getPlayer1().getX());
-							team2.getPlayer1().setY(positionPacket.getPlayer1().getY());
-							team2.getPlayer1().setSpeed(positionPacket.getPlayer1().getSpeed());
-							team2.getPlayer1().setDirection(positionPacket.getPlayer1().getDirection());
+							Player p1 = new Player();
+							Player p2 = new Player();
 							
-							team2.getPlayer2().setX(positionPacket.getPlayer2().getX());
-							team2.getPlayer2().setY(positionPacket.getPlayer2().getY());
-							team2.getPlayer2().setSpeed(positionPacket.getPlayer2().getSpeed());
-							team2.getPlayer2().setDirection(positionPacket.getPlayer2().getDirection());
-						}
+							p1.setX(initPacket.getP1x());
+							p1.setY(initPacket.getP1y());
+							p1.setSpeed(initPacket.getP1speed());
+							p1.setDirection(initPacket.getP1direction());
+							p1.setCharacter(initPacket.getP1character());
+							
+							p2.setX(initPacket.getP2x());
+							p2.setY(initPacket.getP2y());
+							p2.setSpeed(initPacket.getP2speed());
+							p2.setDirection(initPacket.getP2direction());
+							p2.setCharacter(initPacket.getP2character());
+							
+							if (initPacket.getSenderId() == 1) {
+								// Team 1
+								team1 = new Team(p1, p2);
+								System.out.println("Initialized team 1");
+							} else {
+								// Team 2
+								team2 = new Team(p1, p2);
+								System.out.println("Initialized team 2");
+							}
+	
+							break;
+						case TeamPositionPacket.PACKET_ID:
+							TeamPositionPacket positionPacket = (TeamPositionPacket) p;
+							
+							PlayerPositionPacket player1PositionPacket = positionPacket.getPlayer1PositionPacket();
+							PlayerPositionPacket player2PositionPacket = positionPacket.getPlayer2PositionPacket();
+							
+							if(positionPacket.getSenderId() == 1) {
+								team1.getPlayer1().setX(player1PositionPacket.getX());
+								team1.getPlayer1().setY(player1PositionPacket.getY());
+								team1.getPlayer1().setSpeed(player1PositionPacket.getSpeed());
+								team1.getPlayer1().setDirection(player1PositionPacket.getDirection());
+								
+								team1.getPlayer2().setX(player2PositionPacket.getX());
+								team1.getPlayer2().setY(player2PositionPacket.getY());
+								team1.getPlayer2().setSpeed(player2PositionPacket.getSpeed());
+								team1.getPlayer2().setDirection(player2PositionPacket.getDirection());
+							}
+							else {
+								team2.getPlayer1().setX(player1PositionPacket.getX());
+								team2.getPlayer1().setY(player1PositionPacket.getY());
+								team2.getPlayer1().setSpeed(player1PositionPacket.getSpeed());
+								team2.getPlayer1().setDirection(player1PositionPacket.getDirection());
+								
+								team2.getPlayer2().setX(player2PositionPacket.getX());
+								team2.getPlayer2().setY(player2PositionPacket.getY());
+								team2.getPlayer2().setSpeed(player2PositionPacket.getSpeed());
+								team2.getPlayer2().setDirection(player2PositionPacket.getDirection());
+							}
+
 					}
 				}
 
@@ -192,49 +213,61 @@ public class Server implements Runnable {
 
 	public class WriteToPlayer implements Runnable {
 
-		private int teamId;
+		private int playerId;
 		private ObjectOutputStream out;
 		private boolean initializedData = false;
 
-		public WriteToPlayer(int teamId, ObjectOutputStream out) {
-			this.teamId = teamId;
+		public WriteToPlayer(int playerId, ObjectOutputStream out) {
+			this.playerId = playerId;
 			this.out = out;
 		}
 
 		@Override
 		public void run() {
-			System.out.println("created wtp");
 			try {
 				while (true) {
 					if(team1 != null && team2 != null) {
-						
 						if (numberOfTeams == 2 && !initializedData) {
 							//System.out.println("Creating init packet from server");
 							InitializationPacket initPacket;
-							if (teamId == 1) {
-								initPacket = new InitializationPacket(SERVER_SENDER_ID, team2.getPlayer1(),
-										team2.getPlayer2());
+							
+							Player p1;
+							Player p2;
+							
+							if (playerId == 1) {
+								p1 = team2.getPlayer1();
+								p2 = team2.getPlayer2();
 							} else {
-								initPacket = new InitializationPacket(SERVER_SENDER_ID, team1.getPlayer1(),
-										team1.getPlayer2());
+								p1 = team1.getPlayer1();
+								p2 = team1.getPlayer2();
 							}
-							//System.out.println("Sending Init packet from server");
+							
+							initPacket = new InitializationPacket(playerId, p1.getX(), p1.getY(), p1.getSpeed(), p1.getDirection(), p1.getCharacter(), p2.getX(), p2.getY(), p2.getY(), p2.getDirection(), p2.getCharacter());
+							
 							out.writeObject(initPacket);
 							initializedData = true;
 						}
 
-						TeamPositionPacket positionPacket;
+						PlayerPositionPacket player1PositionPacket;
+						PlayerPositionPacket player2PositionPacket;
 						
-						//System.out.println("Creating position packet");
+						Player p1;
+						Player p2;
 
-						if (teamId == 1) {
-							positionPacket = new TeamPositionPacket(SERVER_SENDER_ID, team2.getPlayer1(),
-									team2.getPlayer2());
+						if (playerId == 1) {
+							p1 = team2.getPlayer1();
+							p2 = team2.getPlayer2();
 						} else {
-							positionPacket = new TeamPositionPacket(SERVER_SENDER_ID, team1.getPlayer1(),
-									team1.getPlayer2());
+							p1 = team1.getPlayer1();
+							p2 = team1.getPlayer2();							
 						}
-						//System.out.println("Y: " + team1.getPlayer1().getY());
+						
+						player1PositionPacket = new PlayerPositionPacket(p1.getPlayerId(), p1.getX(), p1.getY(), p1.getSpeed(), p1.getDirection());
+						player2PositionPacket = new PlayerPositionPacket(p2.getPlayerId(), p2.getX(), p2.getY(), p2.getSpeed(), p2.getDirection());
+						
+						TeamPositionPacket teamPositionPacket = new TeamPositionPacket(p1.getPlayerId(), player1PositionPacket, player2PositionPacket);
+						
+						out.writeObject(teamPositionPacket);
 
 					}
 					Thread.sleep(Server.PAUSE_DATAFLOW_TIME);

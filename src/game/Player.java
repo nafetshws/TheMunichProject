@@ -16,12 +16,12 @@ import javax.imageio.ImageIO;
 import multiplayer.InitializationPacket;
 import multiplayer.Packet;
 import multiplayer.TeamAuthenticationPacket;
-import multiplayer.TeamPositionPacket;
+import multiplayer.PlayerPositionPacket;
 import multiplayer.Server;
 import util.Character;
 import util.Direction;
 
-public class Player{
+public class Player {
 	
 	private int x, y, size;
 	
@@ -37,7 +37,7 @@ public class Player{
 	private double s2ns = Math.pow(10, 9);
 	
 	//speichert die Bilder als Variablen (transient ist notwendig, damit die Klasse Player ueber das Netzwerk gesendet werden kann
-	private transient BufferedImage right1, right2, left1, left2, front;
+	private BufferedImage right1, right2, left1, left2, front;
 	private int imageCounter =  0;
 	private Direction direction = Direction.Front;
 	private Character character;

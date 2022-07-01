@@ -58,10 +58,10 @@ public class GameScreen implements Screen{
 		enemyTeam.getPlayer1().setSpeed(me.getEnemy1().getSpeed());
 		enemyTeam.getPlayer1().setDirection(me.getEnemy1().getDirection());
 		
-		enemyTeam.getPlayer2().setX(me.getPlayer2().getX());
-		enemyTeam.getPlayer2().setY(me.getPlayer2().getY());
-		enemyTeam.getPlayer2().setSpeed(me.getPlayer2().getSpeed());
-		enemyTeam.getPlayer2().setDirection(me.getPlayer2().getDirection());
+		enemyTeam.getPlayer2().setX(me.getEnemy2().getX());
+		enemyTeam.getPlayer2().setY(me.getEnemy2().getY());
+		enemyTeam.getPlayer2().setSpeed(me.getEnemy2().getSpeed());
+		enemyTeam.getPlayer2().setDirection(me.getEnemy2().getDirection());
 		
 	}
 
