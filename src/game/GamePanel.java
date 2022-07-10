@@ -168,6 +168,7 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		currentScreen.draw(g2);
 		
+		
 		//Alles was hinter dispose steht wird nicht mehr gerendert
 		g2.dispose();
 		
