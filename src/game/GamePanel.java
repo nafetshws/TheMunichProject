@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import ui.CreateGameScreen;
 import ui.GameScreen;
 import ui.Screen;
+import ui.StartScreen;
 import util.Character;
 import util.State;
 
@@ -35,7 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
 	private Team me;
 	private Team enemyTeam;
 	
-	public State state = State.Running;
+	public State state;
 	private Map<State, Screen> screens = new HashMap<>();
 	private Screen currentScreen;
 	
@@ -57,9 +58,16 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		CreateGameScreen createGameScreen = new CreateGameScreen(this);
 		GameScreen gameScreen = new GameScreen(this, keyHandler, me, enemyTeam);
+		StartScreen startScreen = new StartScreen(this);
 		
 		screens.put(State.CreateGame, createGameScreen);
 		screens.put(State.Running, gameScreen);
+		screens.put(State.Start, startScreen);
+		
+		state = State.Running;
+		
+		//Fuer Jana: Folgendes Auskommentieren
+		//state = State.Start;
 		
 		currentScreen = screens.get(state);
 		

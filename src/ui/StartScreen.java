@@ -1,18 +1,16 @@
 package ui;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 
 import game.GamePanel;
 
-public class CreateGameScreen implements Screen{
+public class StartScreen implements Screen{
 	
+	private boolean firstTime = true;
 	private GamePanel gp;
 	
-	private boolean oneTime = true;
-	
-	public CreateGameScreen(GamePanel gp) {
+	public StartScreen(GamePanel gp) {
 		this.gp = gp;
 	}
 
@@ -24,22 +22,18 @@ public class CreateGameScreen implements Screen{
 	@Override
 	public void draw(Graphics2D g2) {
 		
-		if(oneTime) {
-			//Höhe und Breite des Fensters
+		if(firstTime) {
 			int w = gp.getWidth();
 			int h = gp.getHeight();
 			System.out.println(w + "x" + h);
-			oneTime = false;
+			firstTime = false;
 		}
-		//Schriftart festlegen
+		
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
-		//Title festlegen
-		String title = "Erstelle ein neues Spiel";
-		//X-Position berechnen, damit der Text mittig ist
+		String title = "Startbildschirm";
 		int x = calculateXPosition(g2, title);
 		int y = 150;
 		
-		//Text zeichnen
 		g2.drawString(title, x, y);
 	}
 	
@@ -50,5 +44,4 @@ public class CreateGameScreen implements Screen{
 		}
 		return 0;
 	}
-
 }
