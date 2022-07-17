@@ -23,7 +23,9 @@ import util.Direction;
 
 public class Player {
 	
-	private int x, y, size;
+	private int worldx, worldy, size;
+	private int screenx;
+	private int screeny;
 	
 	private int speed;
 	
@@ -45,21 +47,22 @@ public class Player {
 	private int playerId;
 	
 	public Player(int x, int y, Character character) {
-		this.x = x;
-		this.y = y;
+		this.worldx = x;
+		this.worldy = y;
 		this.size = 100;
 		this.speed = 6;
 		this.jumpVelocity = -50;
 		this.isJumping = false;
 		this.jumpTime = 0;	
 		this.character = character;
-		
+		screenx = 1920/2 - size/2;
+		screeny = 1080/2 - size/2;
 		loadPlayerImage();
 	}
 	
 	public Player() {
-		this.x = 0;
-		this.y = 0;
+		this.worldx = 0;
+		this.worldy = 0;
 		this.size = 100;
 		this.speed = 6;
 		this.jumpVelocity = -50;
@@ -120,17 +123,17 @@ public class Player {
 		
 		if(imageCounter > 20) imageCounter=0;
 		
-		g2.drawImage(image, x, y, size, size, null);
+		g2.drawImage(image, worldx, worldy, size, size, null);
 	}
 	
 	public void moveLeft() {
 		direction = Direction.Left;
-		x -= speed;
+		worldx -= speed;
 	}
 	
 	public void moveRight() {
 		direction = Direction.Right;
-		x += speed;
+		worldx += speed;
 	}
 	
 	public void dontMove() {
@@ -154,11 +157,11 @@ public class Player {
 		double gameJumpTime = jumpTimeInSeconds * 10;
 		
 		//y(t)=0.5*g*t*t+v*t+y(0)
-		y = (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime + 300);
+		worldy = (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime + 300);
 		
-		if(y > 300) {
+		if(worldy > 300) {
 			//Damit der Spieler nicht durch den Boden fällt
-			y = 300;
+			worldy = 300;
 			isJumping = false;
 			jumpTime = 0;
 		}
@@ -180,19 +183,19 @@ public class Player {
 	}
 
 	public int getX() {
-		return x;
+		return worldx;
 	}
 
 	public void setX(int x) {
-		this.x = x;
+		this.worldx = x;
 	}
 
 	public int getY() {
-		return y;
+		return worldy;
 	}
 
 	public void setY(int y) {
-		this.y = y;
+		this.worldy = y;
 	}
 	
 	public int getSpeed() {
