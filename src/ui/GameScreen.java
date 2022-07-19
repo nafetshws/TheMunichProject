@@ -7,6 +7,7 @@ import game.GamePanel;
 import game.KeyHandler;
 import game.Player;
 import game.Team;
+import items.Trophy;
 
 public class GameScreen implements Screen{
 	
@@ -17,11 +18,15 @@ public class GameScreen implements Screen{
 	
 	private KeyHandler keyHandler;
 	
+	private Trophy trophy;
+	
 	public GameScreen(GamePanel gp, KeyHandler keyHandler, Team me, Team enemyTeam) {
 		this.gp = gp;
 		this.keyHandler = keyHandler;
 		this.me = me;
 		this.enemyTeam = enemyTeam;
+		
+		trophy = new Trophy(200, 200);
 	}
 
 	@Override
@@ -72,6 +77,8 @@ public class GameScreen implements Screen{
 		
 		enemyTeam.getPlayer1().drawPlayer(g2);
 		enemyTeam.getPlayer2().drawPlayer(g2);
+		
+		trophy.draw(g2);
 	}
 
 }
