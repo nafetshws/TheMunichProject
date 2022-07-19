@@ -67,7 +67,7 @@ public class GamePanel extends JPanel implements Runnable {
 		state = State.Running;
 		
 		//Fuer Jana: Folgendes Auskommentieren
-		//state = State.Start;
+		state = State.Start;
 		
 		currentScreen = screens.get(state);
 		
@@ -176,12 +176,16 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		currentScreen.draw(g2);
 		
+		super.paintComponent(g);
 		
+		Graphics2D g3 = (Graphics2D) g;
+		
+		currentScreen.draw(g3); 
 		//Alles was hinter dispose steht wird nicht mehr gerendert
 		g2.dispose();
 		
-	}
-	
-
 		
+		
+		g3.dispose();
+	}
 }
