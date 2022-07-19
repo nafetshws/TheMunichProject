@@ -75,11 +75,10 @@ public class GamePanel extends JPanel implements Runnable {
 		state = State.Running;
 		
 		//Fuer Jana: Folgendes Auskommentieren
-		state = State.Start;
+		//state = State.Start;
 		
 		currentScreen = screens.get(state);
-		
-		System.out.println("Before setting game panel");
+
 		
 		me.getPlayer1().setGamePanel(this);
 		me.getPlayer2().setGamePanel(this);

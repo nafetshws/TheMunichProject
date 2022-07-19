@@ -31,11 +31,12 @@ public class StartScreen implements Screen{
 	public StartScreen(GamePanel gp) {
 		this.gp = gp;
 		gp.setBackground(Color.darkGray);
+		Music myMusic = new Music();
 	}
 
 	@Override
 	public void update() {
-		Music myMusic = new Music();
+		
 	}
 
 	@Override
