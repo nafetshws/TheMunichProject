@@ -13,12 +13,10 @@ public class MainWindow {
 	private static final int PREFFERED_SCREEN_WDITH = 1920;
 	private static final int PREFFERED_SCREEN_HEIGHT = 1080;
 	
-	public GamePanel gamePanel;
-    
     public MainWindow(int width, int height, Team me) {
         JFrame frame = new JFrame("Team #" + me.getPlayer1().getPlayerId());
-        gamePanel = new GamePanel(me);
-        
+        GamePanel gamePanel = new GamePanel(me);
+        gamePanel.setVisible(true);
         //Damit das Spiel richtig schließt
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
