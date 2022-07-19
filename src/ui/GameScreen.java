@@ -3,6 +3,7 @@ package ui;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 
+import World.TileManager;
 import game.GamePanel;
 import game.KeyHandler;
 import game.Player;
@@ -19,18 +20,26 @@ public class GameScreen implements Screen{
 	private KeyHandler keyHandler;
 	
 	private Trophy trophy;
+
+	private TileManager tileM;
+
 	
 	public GameScreen(GamePanel gp, KeyHandler keyHandler, Team me, Team enemyTeam) {
 		this.gp = gp;
 		this.keyHandler = keyHandler;
 		this.me = me;
 		this.enemyTeam = enemyTeam;
+
 		
 		trophy = new Trophy(200, 200);
+
+		tileM = new TileManager(gp);
+
 	}
 
 	@Override
 	public void update() {
+		
 		//Bewegung der Spieler auf der X-Achse
 		//wenn keine Bewegung nach rechts oder links passiert, dann wir die Direction auf front gestellt
 		
@@ -72,6 +81,10 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void draw(Graphics2D g2) {
+		// anscheinend ist es wichtig die Tiles vor den Spielern zu malen
+	
+		tileM.draw(g2);
+		
 		me.getPlayer1().drawPlayer(g2);
 		me.getPlayer2().drawPlayer(g2);
 		
