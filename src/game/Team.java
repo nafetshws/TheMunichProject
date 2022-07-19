@@ -37,8 +37,8 @@ public class Team {
 	}
 	
 	public void updateTeamInformation() {
-		teamX = player1.getX() - player2.getX() / 2 + player2.getX();
-		teamY = player1.getY() - player2.getY() / 2 + player2.getY();
+		teamX = (player1.getX() - player2.getX()) / 2 + player2.getX();
+		teamY = (player1.getY() - player2.getY()) / 2 + player2.getY();
 	}
 
 	public int getTeamX() {

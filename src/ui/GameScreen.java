@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 
@@ -30,10 +31,11 @@ public class GameScreen implements Screen{
 		this.me = me;
 		this.enemyTeam = enemyTeam;
 
-		
 		trophy = new Trophy(200, 200);
 
 		tileM = new TileManager(gp);
+		
+		gp.setBackground(Color.white);
 
 	}
 

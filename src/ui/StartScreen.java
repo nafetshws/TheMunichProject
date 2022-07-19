@@ -35,10 +35,6 @@ public class StartScreen implements Screen, ActionListener{
 		this.gp = gp;
 		gp.setBackground(Color.darkGray);
 		Music myMusic = new Music();
-		
-		
-
-		
 	}
 
 	@Override

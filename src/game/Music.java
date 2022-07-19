@@ -26,8 +26,7 @@ public class Music {
 
         clip = AudioSystem.getClip();
     
-        AudioInputStream BackgroundStream =
-        AudioSystem.getAudioInputStream(new File(musicFile).getAbsoluteFile());
+        AudioInputStream BackgroundStream = AudioSystem.getAudioInputStream(new File(musicFile).getAbsoluteFile());
     
         clip.open(BackgroundStream);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
