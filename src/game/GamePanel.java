@@ -17,6 +17,7 @@ import ui.Screen;
 import ui.StartScreen;
 import util.Character;
 import util.State;
+import world.TileManager;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -39,6 +40,13 @@ public class GamePanel extends JPanel implements Runnable {
 	public State state;
 	private Map<State, Screen> screens = new HashMap<>();
 	private Screen currentScreen;
+	
+	private int screenWidth, screenHeight;
+	private final int maxWorldRows = 32;
+	private final int maxWorldCols = 32;
+	
+	private int screenX, screenY;
+	
 	
 	
 	public GamePanel(Team me) {
@@ -70,6 +78,16 @@ public class GamePanel extends JPanel implements Runnable {
 		//state = State.Start;
 		
 		currentScreen = screens.get(state);
+		
+		System.out.println("Before setting game panel");
+		
+		me.getPlayer1().setGamePanel(this);
+		me.getPlayer2().setGamePanel(this);
+		
+		enemyTeam.getPlayer1().setGamePanel(this);
+		enemyTeam.getPlayer2().setGamePanel(this);
+		
+		System.out.println("after setting both");
 		
 	}
 	 
@@ -163,6 +181,15 @@ public class GamePanel extends JPanel implements Runnable {
 
 	
 	public void update() {
+
+		screenWidth = super.getWidth();
+		screenHeight = super.getHeight();
+		
+		screenX = screenWidth / 2;
+		screenY = screenHeight / 2;
+		
+		me.updateTeamInformation();
+		
 		updateCurrentScreen();
 		currentScreen.update();
 	}
@@ -181,7 +208,29 @@ public class GamePanel extends JPanel implements Runnable {
 		g2.dispose();
 		
 	}
-	
 
+	public int getMaxWorldRows() {
+		return maxWorldRows;
+	}
+
+	public int getMaxWorldCols() {
+		return maxWorldCols;
+	}
+
+	public Team getMe() {
+		return me;
+	}
+	
+	public int getScreenX() {
+		return screenX;
+	}
+	
+	public int getScreenY() {
+		return screenY;
+	}
+	
+	public State getState() {
+		return state;
+	}
 		
 }

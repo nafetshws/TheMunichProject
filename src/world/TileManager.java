@@ -1,4 +1,4 @@
-package World;
+package world;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -16,7 +16,7 @@ public class TileManager {
 	private GamePanel gp;
 	private Tile[] tile;
 	private int numberOfDifferentTiles = 5;
-	private int tileSize = 100;
+	public static final int tileSize = 100;
 	private Tile[][] map;
 	
 	
@@ -24,7 +24,7 @@ public class TileManager {
 	public TileManager(GamePanel gp) {
 		this.gp = gp;
 		tile = new Tile[numberOfDifferentTiles];
-		map = new Tile[16][16];
+		map = new Tile[gp.getMaxWorldRows()][gp.getMaxWorldCols()];
 		
 		getTileImage();
 		
@@ -34,6 +34,8 @@ public class TileManager {
 	}
 	
 	public void getTileImage() {
+		setup(3, "sky", false);
+		setup(2, "wall", true);
 		setup(1, "grass", false);
 		setup(0, "earth", false);
 	}
@@ -95,12 +97,31 @@ public class TileManager {
 	}
 	
 	public void draw(Graphics2D g2) {
-		//g2.drawImage(tile[0].getImage(), 100, 1000, 100, 100,  null);
-		for(int i = 0; i < map.length; i++) {
-			for(int j = 0; j < map[i].length; j++) {
-				g2.drawImage(map[i][j].getImage(), j*tileSize, i*tileSize, tileSize, tileSize, null);
+		
+		int worldRow = 0;
+		int worldCol = 0;
+		
+		while(worldCol < gp.getMaxWorldCols() && worldRow < gp.getMaxWorldRows()) {
+			int worldX = worldCol * TileManager.tileSize;
+			int worldY = worldRow * TileManager.tileSize;
+			int screenX = worldX - gp.getMe().getTeamX() + gp.getScreenX();
+			int screenY = worldY - gp.getMe().getTeamY() + gp.getScreenY();
+			
+			if(worldX + TileManager.tileSize > gp.getMe().getTeamX() - gp.getScreenX() &&
+				worldX - TileManager.tileSize < gp.getMe().getTeamX() + gp.getScreenX() &&
+				worldY + TileManager.tileSize > gp.getMe().getTeamY() - gp.getScreenY() &&
+				worldY - TileManager.tileSize < gp.getMe().getTeamY() + gp.getScreenY()) {
+
+				g2.drawImage(map[worldRow][worldCol].getImage(), screenX, screenY, tileSize, tileSize,null);
+			}
+			worldCol++;
+					
+			if(worldCol == gp.getMaxWorldCols()) {
+				worldCol = 0;
+				worldRow++;
 			}
 		}
+		
 	}
 	
 }

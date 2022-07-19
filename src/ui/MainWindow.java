@@ -22,13 +22,14 @@ public class MainWindow {
         //Damit das Spiel richtig schließt
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        frame.setResizable(true);
+        //frame.setResizable(true);
         //fullscreen
-        //frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         //top bar verschwinden lassen - erstmal deaktiviert (einfacher zum Arbeiten)
         //frame.setUndecorated(true);
         
-        frame.setPreferredSize(new Dimension(width, height));
+        //fuer nicht fullscreen
+        //frame.setPreferredSize(new Dimension(width, height));
         
         frame.add(gamePanel);
         gamePanel.startGameThread();

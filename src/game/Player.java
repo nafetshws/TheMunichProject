@@ -24,8 +24,8 @@ import util.Direction;
 public class Player {
 	
 	private int worldx, worldy, size;
-	private int screenx;
-	private int screeny;
+	private int screenX;
+	private int screenY;
 	
 	private int speed;
 	
@@ -37,6 +37,7 @@ public class Player {
 	private boolean isJumping;
 	private double jumpTime;
 	private double s2ns = Math.pow(10, 9);
+	private int jumpHeight;
 	
 	//speichert die Bilder als Variablen (transient ist notwendig, damit die Klasse Player ueber das Netzwerk gesendet werden kann
 	private BufferedImage right1, right2, left1, left2, front;
@@ -46,8 +47,11 @@ public class Player {
 	
 	private int playerId;
 	
+	private GamePanel gp;
+	
 	public Player(int x, int y, Character character) {
 		this.worldx = x;
+		this.jumpHeight = x;
 		this.worldy = y;
 		this.size = 100;
 		this.speed = 6;
@@ -55,8 +59,7 @@ public class Player {
 		this.isJumping = false;
 		this.jumpTime = 0;	
 		this.character = character;
-		screenx = 1920/2 - size/2;
-		screeny = 1080/2 - size/2;
+
 		loadPlayerImage();
 	}
 	
@@ -123,7 +126,11 @@ public class Player {
 		
 		if(imageCounter > 20) imageCounter=0;
 		
-		g2.drawImage(image, worldx, worldy, size, size, null);
+		
+		screenX = worldx - gp.getMe().getTeamX() + gp.getScreenX();
+		screenY = worldy - gp.getMe().getTeamY() + gp.getScreenY();
+		
+		g2.drawImage(image, screenX, screenY, size, size, null);
 	}
 	
 	public void moveLeft() {
@@ -226,6 +233,11 @@ public class Player {
 		this.direction = direction;
 	}
 	
+	public void setGamePanel(GamePanel gp) {
+		System.out.println("About to set gp");
+		this.gp = gp;
+		System.out.println("State: " + this.gp.getMe().getTeamX());
+	}
 }
 
 

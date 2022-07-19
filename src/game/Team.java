@@ -20,6 +20,8 @@ public class Team {
 
 	private Player enemy1;
 	private Player enemy2;
+	
+	private int teamX, teamY;
 
 	// Multiplayer
 	private Socket socket;
@@ -32,6 +34,19 @@ public class Team {
 
 		this.enemy1 = new Player();
 		this.enemy2 = new Player();
+	}
+	
+	public void updateTeamInformation() {
+		teamX = player1.getX() - player2.getX() / 2 + player2.getX();
+		teamY = player1.getY() - player2.getY() / 2 + player2.getY();
+	}
+
+	public int getTeamX() {
+		return teamX;
+	}
+
+	public int getTeamY() {
+		return teamY;
 	}
 
 	public Player getPlayer1() {

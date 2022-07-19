@@ -3,12 +3,12 @@ package ui;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 
-import World.TileManager;
 import game.GamePanel;
 import game.KeyHandler;
 import game.Player;
 import game.Team;
 import items.Trophy;
+import world.TileManager;
 
 public class GameScreen implements Screen{
 	
