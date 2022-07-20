@@ -17,7 +17,7 @@ import ui.Screen;
 import ui.StartScreen;
 import util.Character;
 import util.State;
-import world.TileManager;
+
 
 
 public class GamePanel extends JPanel implements Runnable {

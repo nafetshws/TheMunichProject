@@ -27,6 +27,9 @@ public class Player {
 	private int screenX;
 	private int screenY;
 	
+	private int characterWidthFactor = 4;
+	private int charackterHeightFactor = 5;
+	
 	private int speed;
 	
 	public static final int GRAVITATIONAL_ACCELERATION = 15;
@@ -53,7 +56,7 @@ public class Player {
 		this.worldx = x;
 		this.jumpHeight = x;
 		this.worldy = y;
-		this.size = 100;
+		this.size = 20;
 		this.speed = 6;
 		this.jumpVelocity = -50;
 		this.isJumping = false;
@@ -66,7 +69,7 @@ public class Player {
 	public Player() {
 		this.worldx = 0;
 		this.worldy = 0;
-		this.size = 100;
+		this.size = 20;
 		this.speed = 6;
 		this.jumpVelocity = -50;
 		this.isJumping = false;
@@ -130,7 +133,7 @@ public class Player {
 		screenX = worldx - gp.getMe().getTeamX() + gp.getScreenX();
 		screenY = worldy - gp.getMe().getTeamY() + gp.getScreenY();
 		
-		g2.drawImage(image, screenX, screenY, size, size, null);
+		g2.drawImage(image, screenX, screenY, size * characterWidthFactor, size * charackterHeightFactor, null);
 	}
 	
 	public void moveLeft() {
@@ -237,6 +240,18 @@ public class Player {
 		System.out.println("About to set gp");
 		this.gp = gp;
 		System.out.println("State: " + this.gp.getMe().getTeamX());
+	}
+	
+	public int getCharacterWidthFactor() {
+		return characterWidthFactor;
+	}
+	
+	public int getCharacterHeightFactor() {
+		return charackterHeightFactor;
+	}
+	
+	public int getSize() {
+		return size;
 	}
 }
 

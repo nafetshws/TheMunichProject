@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 
 import javax.imageio.ImageIO;
 
+import game.CollisionChecker;
 import game.GamePanel;
 
 public class TileManager {
@@ -17,7 +18,7 @@ public class TileManager {
 	private Tile[] tile;
 	private int numberOfDifferentTiles = 5;
 	public static final int tileSize = 100;
-	private Tile[][] map;
+	public static Tile[][] map;
 	
 	
 	
