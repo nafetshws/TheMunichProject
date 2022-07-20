@@ -40,6 +40,8 @@ public class Player {
 	private double lastTime;
 	
 	private boolean isFalling;
+	private boolean collisionRight;
+	private boolean collisionLeft;
 	
 	private boolean isJumping;
 	private double jumpTime;
@@ -141,11 +143,13 @@ public class Player {
 	}
 	
 	public void moveLeft() {
+		if(collisionLeft) return;
 		direction = Direction.Left;
 		worldx -= speed;
 	}
 	
 	public void moveRight() {
+		if(collisionRight) return;
 		direction = Direction.Right;
 		worldx += speed;
 	}
@@ -183,7 +187,7 @@ public class Player {
 	
 	public void fall() {
 		isFalling = true;
-		worldy += speed;
+		worldy += 3*speed;
 		y0 = worldy;
 	}
 	
@@ -275,6 +279,22 @@ public class Player {
 	
 	public void setIsFalling(boolean isFalling) {
 		this.isFalling = isFalling;
+	}
+
+	public boolean getCollisionRight() {
+		return collisionRight;
+	}
+
+	public void setCollisionRight(boolean collisionRight) {
+		this.collisionRight = collisionRight;
+	}
+
+	public boolean getCollisionLeft() {
+		return collisionLeft;
+	}
+
+	public void setCollisionLeft(boolean collisionLeft) {
+		this.collisionLeft = collisionLeft;
 	}
 }
 

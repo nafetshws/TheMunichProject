@@ -38,12 +38,13 @@ public class CollisionChecker {
 		int upperY = player.getY();
 		int lowerY = player.getY() + (player.getSize() * player.getCharacterHeightFactor());
 		
-		int entityLeftCol = leftX / TileManager.tileSize;
-		int entityRightCol = rightX / TileManager.tileSize;
-		int entityTopRow = upperY / TileManager.tileSize;
+		int playerLeftCol = leftX / TileManager.tileSize;
+		int playerRightCol = rightX / TileManager.tileSize;
+		int playerTopRow = upperY / TileManager.tileSize;
 		int playerBottomRow = (lowerY / TileManager.tileSize); 
 		
-		if(map[playerBottomRow][entityLeftCol].getCollision() || map[playerBottomRow][entityRightCol].getCollision()) {
+		//Fall nach unten
+		if(map[playerBottomRow][playerLeftCol].getCollision() || map[playerBottomRow][playerRightCol].getCollision()) {
 			//Collision with bottom
 			player.setY0(upperY);
 			player.setIsFalling(false);
@@ -54,6 +55,22 @@ public class CollisionChecker {
 				player.fall();
 			}
 
+		}
+		
+		//Collision rechts
+		if(map[playerBottomRow-1][playerRightCol].getCollision() || map[playerTopRow][playerRightCol].getCollision()) {
+			player.setCollisionRight(true);
+		}
+		else {
+			player.setCollisionRight(false);
+		}
+		
+		//Collision left
+		if(map[playerBottomRow-1][playerLeftCol].getCollision() || map[playerTopRow][playerLeftCol].getCollision()) {
+			player.setCollisionLeft(true);
+		}
+		else {
+			player.setCollisionLeft(false);
 		}
 		
 		
