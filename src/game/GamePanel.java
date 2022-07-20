@@ -47,8 +47,6 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private int screenX, screenY;
 	
-	
-	
 	public GamePanel(Team me) {
 		
 		this.me = me;
@@ -132,8 +130,9 @@ public class GamePanel extends JPanel implements Runnable {
 			//Sobald die Zeit überschritten wurde, um die entsprechende Anzahl an Bilder/s zu erreichen, wird das neue Bild gerendert.
 			if(delta >= 1) {
 				update();
+				if(currentScreen != screens.get(State.Start)) {
 				repaint();
-				
+				}
 				//Notwendig zum Zählen der fps
 				framesCounter++;
 				
@@ -206,7 +205,15 @@ public class GamePanel extends JPanel implements Runnable {
 		g2.dispose();
 		
 	}
-
+	
+	public void changeScreen(int a) {
+		switch(a) {
+			case 1:
+				state = State.Running;
+			break;
+		}
+	}
+		
 	public int getMaxWorldRows() {
 		return maxWorldRows;
 	}
