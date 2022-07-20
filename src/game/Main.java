@@ -15,8 +15,8 @@ public class Main {
 		//Thread serverThread = new Thread(server);
 		//serverThread.start();
 		
-		Player player1 = new Player(50, 300, Character.Drache);
-		Player player2 = new Player(200, 300, Character.Jason);
+		Player player1 = new Player(50, 800, Character.Drache);
+		Player player2 = new Player(200, 800, Character.Jason);
 		
 		//Player player3 = new Player(400, 300, Character.Medea);
 		//Player player4 = new Player(600, 300, Character.Koenig);

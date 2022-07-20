@@ -47,6 +47,8 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private int screenX, screenY;
 	
+	private CollisionChecker collisionChecker;
+	
 	public GamePanel(Team me) {
 		
 		this.me = me;
@@ -83,6 +85,8 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		enemyTeam.getPlayer1().setGamePanel(this);
 		enemyTeam.getPlayer2().setGamePanel(this);
+		
+		collisionChecker = new CollisionChecker();
 		
 		System.out.println("after setting both");
 		
@@ -188,6 +192,11 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		me.updateTeamInformation();
 		
+		if(state == State.Running) {
+			collisionChecker.checkCollisions(this, me.getPlayer1());
+			collisionChecker.checkCollisions(this, me.getPlayer2());
+		}
+		
 		updateCurrentScreen();
 		currentScreen.update();
 	}
@@ -238,4 +247,8 @@ public class GamePanel extends JPanel implements Runnable {
 		return state;
 	}
 
+	public Map<State, Screen> getScreens() {
+		return screens;
+	}
+	
 }

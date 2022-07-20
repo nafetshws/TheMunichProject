@@ -95,5 +95,9 @@ public class GameScreen implements Screen{
 		
 		trophy.draw(g2);
 	}
+	
+	public TileManager getTileManager() {
+		return tileM;
+	}
 
 }

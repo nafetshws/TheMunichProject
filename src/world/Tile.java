@@ -13,7 +13,7 @@ public class Tile {
 	public void setImage(BufferedImage image) {
 		this.image = image;
 	}
-	public boolean isCollision() {
+	public boolean getCollision() {
 		return collision;
 	}
 	public void setCollision(boolean collision) {

@@ -125,5 +125,9 @@ public class TileManager {
 		
 	}
 	
+	public Tile[][] getMap(){
+		return map;
+	}
+	
 }
 

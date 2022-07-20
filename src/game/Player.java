@@ -27,6 +27,8 @@ public class Player {
 	private int screenX;
 	private int screenY;
 	
+	private int y0 = 800;
+	
 	private int characterWidthFactor = 4;
 	private int charackterHeightFactor = 5;
 	
@@ -36,6 +38,8 @@ public class Player {
 	private int jumpVelocity;
 	
 	private double lastTime;
+	
+	private boolean isFalling;
 	
 	private boolean isJumping;
 	private double jumpTime;
@@ -167,17 +171,24 @@ public class Player {
 		double gameJumpTime = jumpTimeInSeconds * 10;
 		
 		//y(t)=0.5*g*t*t+v*t+y(0)
-		worldy = (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime + 300);
+		worldy = (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime + y0);
 		
-		if(worldy > 300) {
+		if(worldy > y0) {
 			//Damit der Spieler nicht durch den Boden fällt
-			worldy = 300;
+			worldy = y0;
 			isJumping = false;
 			jumpTime = 0;
 		}
 	}
 	
+	public void fall() {
+		isFalling = true;
+		worldy += speed;
+		y0 = worldy;
+	}
+	
 	public void jump() {
+		if(isFalling) return;
 		jumpTime = 0;
 		isJumping = true;
 		lastTime = System.nanoTime();
@@ -252,6 +263,18 @@ public class Player {
 	
 	public int getSize() {
 		return size;
+	}
+	
+	public int getY0() {
+		return y0;
+	}
+	
+	public void setY0(int y0) {
+		this.y0 = y0;
+	}
+	
+	public void setIsFalling(boolean isFalling) {
+		this.isFalling = isFalling;
 	}
 }
 
