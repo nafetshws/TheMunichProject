@@ -45,7 +45,7 @@ public class TileManager {
 				Tile tile = new Tile();
 				tile.setCollision(true);
 				
-				String path = "tiles/row-1-column-1.png";
+				String path = "tilesBackup/invisible.png";
 				BufferedImage img = ImageIO.read(getClass().getClassLoader().getResource(path));
 				
 				tile.setImage(img);
@@ -58,7 +58,7 @@ public class TileManager {
 				Tile tile = new Tile();
 				tile.setCollision(true);
 				
-				String path = "tiles/row-1-column-1.png";
+				String path = "tilesBackup/invisible.png";
 				BufferedImage img = ImageIO.read(getClass().getClassLoader().getResource(path));
 				
 				tile.setImage(img);
