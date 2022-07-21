@@ -40,8 +40,35 @@ public class TileManager {
 	public void loadMap() {
 
 		try {
-			for(int row = 1; row <= map.length; row++) {
-				for(int col = 1; col <= map[row-1].length; col++) {
+			
+			for(int col = 0; col < gp.getMaxWorldCols(); col++) {
+				Tile tile = new Tile();
+				tile.setCollision(true);
+				
+				String path = "tiles/row-1-column-1.png";
+				BufferedImage img = ImageIO.read(getClass().getClassLoader().getResource(path));
+				
+				tile.setImage(img);
+				
+				this.map[0][col] = tile;
+				this.map[gp.getMaxWorldRows()-1][col] = tile;
+			}
+			
+			for(int row = 0; row < gp.getMaxWorldRows(); row++) {
+				Tile tile = new Tile();
+				tile.setCollision(true);
+				
+				String path = "tiles/row-1-column-1.png";
+				BufferedImage img = ImageIO.read(getClass().getClassLoader().getResource(path));
+				
+				tile.setImage(img);
+				
+				this.map[row][0] = tile;
+				this.map[row][gp.getMaxWorldCols()-1] = tile;
+			}
+			
+			for(int row = 1; row <= map.length - 2; row++) {
+				for(int col = 1; col <= (map[row].length)-2; col++) {
 					String path = "tiles/row-" + row + "-column-" + col + ".png";
 					BufferedImage img = ImageIO.read(getClass().getClassLoader().getResource(path));
 					
@@ -56,7 +83,7 @@ public class TileManager {
 						tile.setCollision(false);
 					}
 					
-					this.map[row-1][col-1] = tile;
+					this.map[row][col] = tile;
 				}
 			}
 		} catch (Exception e) {
