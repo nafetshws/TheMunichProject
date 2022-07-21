@@ -24,57 +24,95 @@ public class CollisionChecker {
 		}
 	}
 	
-	public CollisionChecker() { }
+	public CollisionChecker(GamePanel gp) { 
+		this.gp = gp;
+		if(gp.getState() == State.Running) {
+			GameScreen gS = (GameScreen) gp.getScreens().get(gp.getState());
+			this.map = gS.getTileManager().getMap();
+		}
+	}
 	
 	public void checkCollisions(GamePanel gp, Player player) {
-		this.player = player;
+		
+		this.gp = gp;
 		if(gp.getState() == State.Running) {
 			GameScreen gS = (GameScreen) gp.getScreens().get(gp.getState());
 			this.map = gS.getTileManager().getMap();
 		}
 		
+		if(this.map == null) {
+			System.out.println("Fehler: Map ist null");
+			return;
+		}
+		
+		this.player = player;
+
 		int leftX = player.getX();
 		int rightX = player.getX() + (player.getSize() * player.getCharacterWidthFactor());
 		int upperY = player.getY();
 		int lowerY = player.getY() + (player.getSize() * player.getCharacterHeightFactor());
 		
-		int playerLeftCol = (leftX - player.getSpeed()) / TileManager.tileSize;
-		int playerRightCol = (rightX + player.getSpeed()) / TileManager.tileSize;
+		int playerLeftCol = (leftX) / TileManager.tileSize;
+		int playerRightCol = (rightX) / TileManager.tileSize;
 		int playerTopRow = upperY / TileManager.tileSize;
-		int playerBottomRow = ((lowerY + player.getSpeed())/ TileManager.tileSize); 
+
+		int playerBottomRow = ((lowerY)/ TileManager.tileSize); 
+
+		//System.out.println("r: " + map[playerBottomRow-1][playerRightCol].tileName);
 		
 		//Fall nach unten
 		if(map[playerBottomRow][playerLeftCol].getCollision() || map[playerBottomRow][playerRightCol].getCollision()) {
-			//Collision with bottom
-			player.setY0(upperY);
-			player.setIsFalling(false);
+			//Kollision mit Boden
+			//player.setIsJumping(false);
+			player.stopJumping();
+			player.stopFalling();
+			player.setY0(player.getY());
 		}
 		else {
 			//update player y position
 			if(!player.getIsJumping()) {
+				//Spieler fällt
 				player.fall();
+				//System.out.println("Spieler fällt");
 			}
 
 		}
 		
-		//Collision rechts
-		if(map[playerBottomRow-1][playerRightCol].getCollision() || map[playerTopRow][playerRightCol].getCollision()) {
-			player.setCollisionRight(true);
+		if(player.getIsFalling() || player.getIsJumping()) {
+			if(map[playerBottomRow][playerRightCol].getCollision() || map[playerTopRow][playerRightCol].getCollision()) {
+				System.out.println("Collision detektiert");
+				player.setCollisionRight(true);
+			}
+			else {
+				player.setCollisionRight(false);
+			}
+			
+			//Collision left
+			if(map[playerBottomRow][playerLeftCol].getCollision() || map[playerTopRow][playerLeftCol].getCollision()) {
+				player.setCollisionLeft(true);
+			}
+			else {
+				player.setCollisionLeft(false);
+			}
 		}
 		else {
-			player.setCollisionRight(false);
+			//Collision rechts
+			if(map[playerBottomRow-1][playerRightCol].getCollision() || map[playerTopRow][playerRightCol].getCollision()) {
+				System.out.println("Collision detektiert");
+				player.setCollisionRight(true);
+			}
+			else {
+				player.setCollisionRight(false);
+			}
+			
+			//Collision left
+			if(map[playerBottomRow-1][playerLeftCol].getCollision() || map[playerTopRow][playerLeftCol].getCollision()) {
+				player.setCollisionLeft(true);
+			}
+			else {
+				player.setCollisionLeft(false);
+			}
 		}
-		
-		//Collision left
-		if(map[playerBottomRow-1][playerLeftCol].getCollision() || map[playerTopRow][playerLeftCol].getCollision()) {
-			player.setCollisionLeft(true);
-		}
-		else {
-			player.setCollisionLeft(false);
-		}
-		
-		
-		
 
 	}
 

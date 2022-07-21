@@ -6,6 +6,13 @@ public class Tile {
 	
 	private BufferedImage image;
 	private boolean collision = false;
+	public String tileName;
+	
+	public Tile() {}
+	
+	public Tile(String tileName) {
+		this.tileName = tileName;
+	}
 	
 	public BufferedImage getImage() {
 		return image;

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 
+import game.CollisionChecker;
 import game.GamePanel;
 import game.KeyHandler;
 import game.Player;
@@ -19,6 +20,7 @@ public class GameScreen implements Screen{
 	private Team enemyTeam;
 	
 	private KeyHandler keyHandler;
+	private CollisionChecker collisionChecker;
 	
 	private Trophy trophy;
 
@@ -35,7 +37,10 @@ public class GameScreen implements Screen{
 
 		tileM = new TileManager(gp);
 		
-		gp.setBackground(Color.white);
+		
+		this.gp.setBackground(Color.white);
+		
+		collisionChecker = new CollisionChecker(gp);
 
 	}
 
@@ -45,16 +50,23 @@ public class GameScreen implements Screen{
 		//Bewegung der Spieler auf der X-Achse
 		//wenn keine Bewegung nach rechts oder links passiert, dann wir die Direction auf front gestellt
 		
+		//Updated y Position vom Spieler
+		me.getPlayer1().updateY();
+		//Updated y Position vom Spieler
+		me.getPlayer2().updateY();
+		
+		collisionChecker.checkCollisions(gp, me.getPlayer1());
+		collisionChecker.checkCollisions(gp, me.getPlayer2());
 		//---Player 1---
 		if(keyHandler.getRight() == true) me.getPlayer1().moveRight();
 		else if(keyHandler.getLeft() == true) me.getPlayer1().moveLeft();
 		else me.getPlayer1().dontMove();
 		
 		//Sprung registriert?
-		if(keyHandler.getUp() && !me.getPlayer1().getIsJumping()) me.getPlayer1().jump();
-		
-		//Updated y Position vom Spieler
-		me.getPlayer1().updateY();
+		if(keyHandler.getUp() && !me.getPlayer1().getIsJumping()) { 
+			me.getPlayer1().jump();
+		}
+	
 		
 		//---Player 2----
 		
@@ -63,10 +75,10 @@ public class GameScreen implements Screen{
 		else me.getPlayer2().dontMove();
 		
 		//Sprung registriert?
-		if(keyHandler.isUpArrow() && !me.getPlayer2().getIsJumping()) me.getPlayer2().jump();
-		
-		//Updated y Position vom Spieler
-		me.getPlayer2().updateY();
+		if(keyHandler.isUpArrow() && !me.getPlayer2().getIsJumping()) { 
+			me.getPlayer2().jump();
+		}
+	
 		
 		//Updated die Informationen vom gegnerischen Team
 		enemyTeam.getPlayer1().setX(me.getEnemy1().getX());

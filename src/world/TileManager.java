@@ -47,7 +47,7 @@ public class TileManager {
 		//Die Bilder werden in der Klasse Tile gespeichert
 		try {
 			
-			tile[index] = new Tile();
+			tile[index] = new Tile(tileName);
 			BufferedImage image = ImageIO.read(getClass().getClassLoader().getResource("tiles/" + tileName + ".png"));
 			tile[index].setImage(image);
 			tile[index].setCollision(collision);

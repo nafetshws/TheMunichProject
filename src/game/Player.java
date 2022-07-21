@@ -39,7 +39,6 @@ public class Player {
 	
 	private double lastTime;
 	
-	private boolean isFalling;
 	private boolean collisionRight;
 	private boolean collisionLeft;
 	
@@ -47,6 +46,10 @@ public class Player {
 	private double jumpTime;
 	private double s2ns = Math.pow(10, 9);
 	private int jumpHeight;
+	
+	private boolean isFalling;
+	private double lastFallTime;
+	private double fallTime;
 	
 	//speichert die Bilder als Variablen (transient ist notwendig, damit die Klasse Player ueber das Netzwerk gesendet werden kann
 	private BufferedImage right1, right2, left1, left2, front;
@@ -168,34 +171,43 @@ public class Player {
 			jumpTime += timeInterval;
 		}
 		
+		if(isFalling) {
+			//Zählen der Zeit für die Sprungdauer/Zeit (jumpingTime)
+			double currentTime = System.nanoTime();
+			double timeInterval = currentTime - lastFallTime;
+			lastFallTime = currentTime;
+			
+			fallTime += timeInterval;
+		}
+		
 		//Umwandlung der Zeit für Formel: Nanosekunden -> Sekunden
 		double jumpTimeInSeconds = jumpTime / s2ns;
+		double fallTimeInSeconds = fallTime / s2ns;
 		
 		// Zur Manipulation der Zeit einfach die Konstante verändern
 		double gameJumpTime = jumpTimeInSeconds * 10;
+		double gameFallTime = fallTimeInSeconds * 10;
 		
 		//y(t)=0.5*g*t*t+v*t+y(0)
-		worldy = (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime + y0);
-		
-		if(worldy > y0) {
-			//Damit der Spieler nicht durch den Boden fällt
-			worldy = y0;
-			isJumping = false;
-			jumpTime = 0;
+		if(isFalling) {
+			worldy = (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameFallTime * gameFallTime + y0);
+		} else if(isJumping){
+			worldy = (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime + y0);
 		}
+		
+	}
+	
+
+	
+	public void jump() {
+		//jumpTime = 0;
+		isJumping = true;
+		lastTime = System.nanoTime();
 	}
 	
 	public void fall() {
 		isFalling = true;
-		worldy += 3*speed;
-		y0 = worldy;
-	}
-	
-	public void jump() {
-		if(isFalling) return;
-		jumpTime = 0;
-		isJumping = true;
-		lastTime = System.nanoTime();
+		lastFallTime = System.nanoTime();
 	}
 	
 	public Character getCharacter() {
@@ -252,9 +264,7 @@ public class Player {
 	}
 	
 	public void setGamePanel(GamePanel gp) {
-		System.out.println("About to set gp");
 		this.gp = gp;
-		System.out.println("State: " + this.gp.getMe().getTeamX());
 	}
 	
 	public int getCharacterWidthFactor() {
@@ -277,8 +287,8 @@ public class Player {
 		this.y0 = y0;
 	}
 	
-	public void setIsFalling(boolean isFalling) {
-		this.isFalling = isFalling;
+	public void setIsJumping(boolean isJumping) {
+		this.isJumping = isJumping;
 	}
 
 	public boolean getCollisionRight() {
@@ -295,6 +305,28 @@ public class Player {
 
 	public void setCollisionLeft(boolean collisionLeft) {
 		this.collisionLeft = collisionLeft;
+	}
+	
+	public void setjumpVelocity (int jumpVelocity) {
+		this.jumpVelocity = jumpVelocity;
+	}
+	
+	public boolean getIsFalling() {
+		return isFalling;
+	}
+	
+	public void setIsFalling(boolean isFalling) {
+		this.isFalling = isFalling;
+	}
+	
+	public void stopFalling() {
+		fallTime = 0;
+		isFalling = false;
+	}
+	
+	public void stopJumping() {
+		jumpTime = 0;
+		isJumping = false;
 	}
 }
 

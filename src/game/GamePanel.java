@@ -47,7 +47,6 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	private int screenX, screenY;
 	
-	private CollisionChecker collisionChecker;
 	
 	public GamePanel(Team me) {
 		
@@ -85,10 +84,6 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		enemyTeam.getPlayer1().setGamePanel(this);
 		enemyTeam.getPlayer2().setGamePanel(this);
-		
-		collisionChecker = new CollisionChecker();
-		
-		System.out.println("after setting both");
 		
 	}
 	 
@@ -184,10 +179,6 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public void update() {
 		
-		if(state == State.Running) {
-			collisionChecker.checkCollisions(this, me.getPlayer1());
-			collisionChecker.checkCollisions(this, me.getPlayer2());
-		}
 
 		screenWidth = super.getWidth();
 		screenHeight = super.getHeight();
@@ -196,7 +187,7 @@ public class GamePanel extends JPanel implements Runnable {
 		screenY = screenHeight / 2;
 		
 		me.updateTeamInformation();
-		
+
 		updateCurrentScreen();
 		currentScreen.update();
 	}
