@@ -57,8 +57,6 @@ public class CollisionChecker {
 		int playerTopRow = upperY / TileManager.tileSize;
 
 		int playerBottomRow = ((lowerY)/ TileManager.tileSize); 
-
-		System.out.println("Y: " + player.getY());
 		
 		if(playerBottomRow >= 118) return;
 		
@@ -114,8 +112,13 @@ public class CollisionChecker {
 			}
 		}
 		
-		//
-
+		// Collision oben
+		if(map[playerTopRow-1][playerLeftCol].getCollision() || map[playerTopRow-1][playerRightCol].getCollision()) {
+			//Kollision mit Boden
+			//player.setIsJumping(false);
+			player.fall();
+			player.setY0(player.getY());
+		}
 	}
 
 }
