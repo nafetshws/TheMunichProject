@@ -105,7 +105,7 @@ public class GameScreen implements Screen{
 		enemyTeam.getPlayer1().drawPlayer(g2);
 		enemyTeam.getPlayer2().drawPlayer(g2);
 		
-		trophy.draw(g2);
+		//trophy.draw(g2);
 	}
 	
 	public TileManager getTileManager() {

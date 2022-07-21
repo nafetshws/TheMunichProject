@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import game.CollisionChecker;
 import game.GamePanel;
+import util.Collisions;
 
 public class TileManager {
 	
@@ -37,9 +38,7 @@ public class TileManager {
 	}
 	
 	public void loadMap() {
-		//Format: row-x-column-y.png
-		String[] collisions = {"18,19","18,20","18,21","18,22","18,23","18,24","18,25","18,26","18,27","19,19","19,27","20,19","20,27",
-				"21,10","21,11","21,12","21,13","21,14","21,15","21,16","21,17","21,18","21,19","21,20","21,21","21,22", "115,1"};
+
 		try {
 			for(int row = 1; row <= map.length; row++) {
 				for(int col = 1; col <= map[row-1].length; col++) {
@@ -50,7 +49,7 @@ public class TileManager {
 					tile.setImage(img);
 					
 					String rowXCol = Integer.toString(row) + "," + Integer.toString(col);
-					if(Arrays.asList(collisions).contains(rowXCol)) {
+					if(Arrays.asList(Collisions.collisions).contains(rowXCol)) {
 						System.out.println("Found collision: " + rowXCol);
 						tile.setCollision(true);
 					} else {

@@ -32,7 +32,7 @@ public class GamePanel extends JPanel implements Runnable {
 	//Thread ist die Zeit
 	private Thread gameThread;
 	// verwaltet die Tastenangabe
-	private KeyHandler keyHandler = new KeyHandler();
+	private KeyHandler keyHandler;
 	
 	private Team me;
 	private Team enemyTeam;
@@ -60,12 +60,13 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		this.setBackground(Color.white);
 		 
+		keyHandler = new KeyHandler(this);
 		this.addKeyListener(keyHandler);
 		this.setFocusable(true);
 		
 		CreateGameScreen createGameScreen = new CreateGameScreen(this);
 		GameScreen gameScreen = new GameScreen(this, keyHandler, me, enemyTeam);
-		StartScreen startScreen = new StartScreen(this);
+		StartScreen startScreen = new StartScreen(this, keyHandler);
 		
 		screens.put(State.CreateGame, createGameScreen);
 		screens.put(State.Running, gameScreen);
@@ -74,7 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
 		state = State.Running;
 		
 		//Fuer Jana: Folgendes Auskommentieren
-		//state = State.Start;
+		state = State.Start;
 		
 		currentScreen = screens.get(state);
 
@@ -129,9 +130,7 @@ public class GamePanel extends JPanel implements Runnable {
 			//Sobald die Zeit überschritten wurde, um die entsprechende Anzahl an Bilder/s zu erreichen, wird das neue Bild gerendert.
 			if(delta >= 1) {
 				update();
-				if(currentScreen != screens.get(State.Start)) {
 				repaint();
-				}
 				//Notwendig zum Zählen der fps
 				framesCounter++;
 				
@@ -206,12 +205,8 @@ public class GamePanel extends JPanel implements Runnable {
 		
 	}
 	
-	public void changeScreen(int a) {
-		switch(a) {
-			case 1:
-				state = State.Running;
-			break;
-		}
+	public void changeScreen(State state) {
+		this.state = state;
 	}
 		
 	public int getMaxWorldRows() {

@@ -3,6 +3,9 @@ package game;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import ui.StartScreen;
+import util.State;
+
 public class KeyHandler implements KeyListener{
 	
 	private boolean up;
@@ -14,6 +17,16 @@ public class KeyHandler implements KeyListener{
 	private boolean downArrow;
 	private boolean rightArrow;
 	private boolean leftArrow;
+	
+	private GamePanel gp;
+	private State state = State.Running;
+	
+	public KeyHandler() {}
+	
+	public KeyHandler(GamePanel gp) {
+		this.gp = gp;
+		this.state = gp.getState();
+	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {}
@@ -21,6 +34,22 @@ public class KeyHandler implements KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int code = e.getKeyCode();
+		
+		if(gp.getState() == State.Start) {
+			StartScreen screen = (StartScreen) gp.getScreens().get(State.Start);
+			if(code == KeyEvent.VK_UP) {
+				screen.increaseIndex();
+			}
+			
+			if(code == KeyEvent.VK_DOWN) {
+				screen.decreaseIndex();
+			}
+			
+			if(code == KeyEvent.VK_ENTER) {
+				screen.select();
+			}
+			return;
+		}
 		
 		//Player 1
 		if(code == KeyEvent.VK_W) {
