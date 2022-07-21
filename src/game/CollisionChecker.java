@@ -38,10 +38,10 @@ public class CollisionChecker {
 		int upperY = player.getY();
 		int lowerY = player.getY() + (player.getSize() * player.getCharacterHeightFactor());
 		
-		int playerLeftCol = leftX / TileManager.tileSize;
-		int playerRightCol = rightX / TileManager.tileSize;
+		int playerLeftCol = (leftX - player.getSpeed()) / TileManager.tileSize;
+		int playerRightCol = (rightX + player.getSpeed()) / TileManager.tileSize;
 		int playerTopRow = upperY / TileManager.tileSize;
-		int playerBottomRow = (lowerY / TileManager.tileSize); 
+		int playerBottomRow = ((lowerY + player.getSpeed())/ TileManager.tileSize); 
 		
 		//Fall nach unten
 		if(map[playerBottomRow][playerLeftCol].getCollision() || map[playerBottomRow][playerRightCol].getCollision()) {
