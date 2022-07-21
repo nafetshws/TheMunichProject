@@ -63,8 +63,9 @@ public class Player {
 	
 	public Player(int x, int y, Character character) {
 		this.worldx = x;
-		this.jumpHeight = x;
 		this.worldy = y;
+		this.y0 = y;
+		this.jumpHeight = x;
 		this.size = 20;
 		this.speed = 6;
 		this.jumpVelocity = -50;

@@ -58,7 +58,9 @@ public class CollisionChecker {
 
 		int playerBottomRow = ((lowerY)/ TileManager.tileSize); 
 
-		//System.out.println("r: " + map[playerBottomRow-1][playerRightCol].tileName);
+		System.out.println("Y: " + player.getY());
+		
+		if(playerBottomRow >= 118) return;
 		
 		//Fall nach unten
 		if(map[playerBottomRow][playerLeftCol].getCollision() || map[playerBottomRow][playerRightCol].getCollision()) {
@@ -80,7 +82,6 @@ public class CollisionChecker {
 		
 		if(player.getIsFalling() || player.getIsJumping()) {
 			if(map[playerBottomRow][playerRightCol].getCollision() || map[playerTopRow][playerRightCol].getCollision()) {
-				System.out.println("Collision detektiert");
 				player.setCollisionRight(true);
 			}
 			else {
@@ -98,7 +99,6 @@ public class CollisionChecker {
 		else {
 			//Collision rechts
 			if(map[playerBottomRow-1][playerRightCol].getCollision() || map[playerTopRow][playerRightCol].getCollision()) {
-				System.out.println("Collision detektiert");
 				player.setCollisionRight(true);
 			}
 			else {

@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -17,8 +18,8 @@ public class TileManager {
 	private GamePanel gp;
 	private Tile[] tile;
 	private int numberOfDifferentTiles = 5;
-	public static final int tileSize = 100;
-	public static Tile[][] map;
+	public static final int tileSize = 50;
+	public Tile[][] map;
 	
 	
 	
@@ -29,9 +30,40 @@ public class TileManager {
 		
 		getTileImage();
 		
-		loadMap("map2.txt");
+		//loadCustomMap("map2.txt");
+		loadMap();
 		
 		//checkMap();
+	}
+	
+	public void loadMap() {
+		//Format: row-x-column-y.png
+		String[] collisions = {"18,19","18,20","18,21","18,22","18,23","18,24","18,25","18,26","18,27","19,19","19,27","20,19","20,27",
+				"21,10","21,11","21,12","21,13","21,14","21,15","21,16","21,17","21,18","21,19","21,20","21,21","21,22", "115,1"};
+		try {
+			for(int row = 1; row <= map.length; row++) {
+				for(int col = 1; col <= map[row-1].length; col++) {
+					String path = "tiles/row-" + row + "-column-" + col + ".png";
+					BufferedImage img = ImageIO.read(getClass().getClassLoader().getResource(path));
+					
+					Tile tile = new Tile();
+					tile.setImage(img);
+					
+					String rowXCol = Integer.toString(row) + "," + Integer.toString(col);
+					if(Arrays.asList(collisions).contains(rowXCol)) {
+						System.out.println("Found collision: " + rowXCol);
+						tile.setCollision(true);
+					} else {
+						tile.setCollision(false);
+					}
+					
+					this.map[row-1][col-1] = tile;
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Fehler beim Laden der Map");
+			e.printStackTrace();
+		}
 	}
 	
 	public void getTileImage() {
@@ -48,7 +80,7 @@ public class TileManager {
 		try {
 			
 			tile[index] = new Tile(tileName);
-			BufferedImage image = ImageIO.read(getClass().getClassLoader().getResource("tiles/" + tileName + ".png"));
+			BufferedImage image = ImageIO.read(getClass().getClassLoader().getResource("tilesBackup/" + tileName + ".png"));
 			tile[index].setImage(image);
 			tile[index].setCollision(collision);
 			
@@ -58,7 +90,7 @@ public class TileManager {
 		}	
 	}
 	
-	public void loadMap(String fileName) {
+	public void loadCustomMap(String fileName) {
 		try {
 			System.out.println("Before");
 			InputStream in = getClass().getClassLoader().getResourceAsStream("map/" + fileName);
