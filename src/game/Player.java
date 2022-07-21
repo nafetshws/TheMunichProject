@@ -177,22 +177,12 @@ public class Player {
 		//y(t)=0.5*g*t*t+v*t+y(0)
 		worldy = (int)(0.5 * GRAVITATIONAL_ACCELERATION * gameJumpTime * gameJumpTime + jumpVelocity * gameJumpTime + y0);
 		
-		if(worldy > y0) {
-			//Damit der Spieler nicht durch den Boden fällt
-			worldy = y0;
-			isJumping = false;
-			jumpTime = 0;
+		
 		}
-	}
 	
-	public void fall() {
-		isFalling = true;
-		worldy += 3*speed;
-		y0 = worldy;
-	}
+
 	
 	public void jump() {
-		if(isFalling) return;
 		jumpTime = 0;
 		isJumping = true;
 		lastTime = System.nanoTime();
@@ -277,8 +267,8 @@ public class Player {
 		this.y0 = y0;
 	}
 	
-	public void setIsFalling(boolean isFalling) {
-		this.isFalling = isFalling;
+	public void setIsJumping(boolean isJumping) {
+		this.isJumping = isJumping;
 	}
 
 	public boolean getCollisionRight() {
@@ -295,6 +285,10 @@ public class Player {
 
 	public void setCollisionLeft(boolean collisionLeft) {
 		this.collisionLeft = collisionLeft;
+	}
+	
+	public void setjumpVelocity (int jumpVelocity) {
+		this.jumpVelocity = jumpVelocity;
 	}
 }
 

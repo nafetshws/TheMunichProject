@@ -38,21 +38,23 @@ public class CollisionChecker {
 		int upperY = player.getY();
 		int lowerY = player.getY() + (player.getSize() * player.getCharacterHeightFactor());
 		
-		int playerLeftCol = leftX / TileManager.tileSize;
-		int playerRightCol = rightX / TileManager.tileSize;
+		int playerLeftCol = (leftX - player.getSpeed()) / TileManager.tileSize;
+		int playerRightCol = (rightX + player.getSpeed()) / TileManager.tileSize;
 		int playerTopRow = upperY / TileManager.tileSize;
-		int playerBottomRow = (lowerY / TileManager.tileSize); 
+		int playerBottomRow = (lowerY + 80) / TileManager.tileSize; 
 		
 		//Fall nach unten
 		if(map[playerBottomRow][playerLeftCol].getCollision() || map[playerBottomRow][playerRightCol].getCollision()) {
 			//Collision with bottom
-			player.setY0(upperY);
-			player.setIsFalling(false);
+			player.setIsJumping(false);
+			player.setY0(player.getY());
 		}
 		else {
 			//update player y position
 			if(!player.getIsJumping()) {
-				player.fall();
+				player.setIsJumping(true);
+				player.jump();
+				player.setjumpVelocity(0);
 			}
 
 		}
@@ -72,9 +74,6 @@ public class CollisionChecker {
 		else {
 			player.setCollisionLeft(false);
 		}
-		
-		
-		
 
 	}
 
