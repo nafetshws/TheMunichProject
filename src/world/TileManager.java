@@ -29,7 +29,7 @@ public class TileManager {
 		
 		getTileImage();
 		
-		loadMap("map1.txt");
+		loadMap("map2.txt");
 		
 		//checkMap();
 	}
