@@ -16,11 +16,11 @@ public class Main {
 		//Thread serverThread = new Thread(server);
 		//serverThread.start();
 		
-		Player player1 = new Player(0, 5600, Character.Drache);
-		Player player2 = new Player(0, 5600, Character.Jason);
+		Player player1 = new Player(0, 5500, Character.Drache);
+		Player player2 = new Player(0, 5500, Character.Jason);
 		
-		//Player player3 = new Player(400, 300, Character.Medea);
-		//Player player4 = new Player(600, 300, Character.Koenig);
+		//Player player3 = new Player(1500, 5600, Character.Medea);
+		//Player player4 = new Player(1600, 5600, Character.Koenig);
 		
 		Team team1 = new Team(player1, player2);
 		//Team team2 = new Team(player3, player4);

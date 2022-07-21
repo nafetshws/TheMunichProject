@@ -113,6 +113,8 @@ public class CollisionChecker {
 				player.setCollisionLeft(false);
 			}
 		}
+		
+		//
 
 	}
 

@@ -66,9 +66,9 @@ public class Player {
 		this.worldy = y;
 		this.y0 = y;
 		this.jumpHeight = x;
-		this.size = 20;
+		this.size = 40;
 		this.speed = 6;
-		this.jumpVelocity = -50;
+		this.jumpVelocity = -130;
 		this.isJumping = false;
 		this.jumpTime = 0;	
 		this.character = character;
@@ -79,9 +79,9 @@ public class Player {
 	public Player() {
 		this.worldx = 0;
 		this.worldy = 0;
-		this.size = 20;
+		this.size = 40;
 		this.speed = 6;
-		this.jumpVelocity = -50;
+		this.jumpVelocity = -130;
 		this.isJumping = false;
 		this.jumpTime = 0;	
 		this.character = Character.Drache;
