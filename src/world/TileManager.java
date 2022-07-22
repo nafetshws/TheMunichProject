@@ -38,6 +38,8 @@ public class TileManager {
 	}
 	
 	public void loadMap() {
+		
+		System.out.println("Lädt Map...Dies kann einen Moment dauern.");
 
 		try {
 			
@@ -77,7 +79,6 @@ public class TileManager {
 					
 					String rowXCol = Integer.toString(row) + "," + Integer.toString(col);
 					if(Arrays.asList(Collisions.collisions).contains(rowXCol)) {
-						System.out.println("Found collision: " + rowXCol);
 						tile.setCollision(true);
 					} else {
 						tile.setCollision(false);
