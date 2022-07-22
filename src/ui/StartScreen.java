@@ -23,6 +23,7 @@ import game.KeyHandler;
 import game.Main;
 import game.Music;
 import game.Settings;
+import multiplayer.Server;
 import util.Menu;
 import util.State;
 
@@ -179,6 +180,9 @@ public class StartScreen implements Screen, ActionListener{
 		switch(index) {
 		case 0:
 			gp.changeScreen(State.Running);
+			//Server server = new Server();
+			//Thread serverThread = new Thread(server);
+			//serverThread.start();
 			break;
 		case 1:
 			gp.changeScreen(State.Running);
