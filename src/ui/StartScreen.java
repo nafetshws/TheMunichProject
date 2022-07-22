@@ -44,7 +44,7 @@ public class StartScreen implements Screen, ActionListener{
 		gp.setBackground(Color.darkGray);
 		index = 0;
 		this.keyHandler = keyHandler;
-		//Music myMusic = new Music();
+		Music myMusic = new Music();
 	}
 
 	@Override
