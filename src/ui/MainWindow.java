@@ -5,15 +5,19 @@ import javax.swing.*;
 import game.GamePanel;
 import game.Player;
 import game.Team;
+import multiplayer.Server;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class MainWindow {
 	
 	private static final int PREFFERED_SCREEN_WDITH = 1920;
 	private static final int PREFFERED_SCREEN_HEIGHT = 1080;
 	
-    public MainWindow(int width, int height, Team me) {
+    public MainWindow(int width, int height, Team me, Server server) {
         JFrame frame = new JFrame("Team #" + me.getPlayer1().getPlayerId());
         GamePanel gamePanel = new GamePanel(me);
         gamePanel.setVisible(true);
@@ -32,13 +36,17 @@ public class MainWindow {
         frame.add(gamePanel);
         gamePanel.startGameThread();
         
-//        frame.addWindowListener(new WindowAdapter() {
-//            @Override
-//            public void windowClosing(WindowEvent e) {
-//                System.out.println("WindowClosingDemo.windowClosing");
-//                System.exit(0);
-//            }
-//        });
+        frame.addWindowListener((WindowListener) new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if(server != null) {
+                	me.disconnect();
+                	server.closeServerConnection();
+                	System.out.println("Server wurde geschlossen");
+                }
+                System.exit(0);
+            }
+        });
 
         // display it
         frame.pack();

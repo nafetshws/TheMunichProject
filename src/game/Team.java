@@ -36,6 +36,15 @@ public class Team {
 		this.enemy2 = new Player();
 	}
 	
+	public void disconnect() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void updateTeamInformation() {
 		teamX = (player1.getX() - player2.getX()) / 2 + player2.getX();
 		teamY = (player1.getY() - player2.getY()) / 2 + player2.getY();

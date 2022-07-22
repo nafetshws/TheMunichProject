@@ -28,8 +28,8 @@ public class Main {
 		team1.connectToServer();
 		team2.connectToServer();
 	
-		MainWindow team1Window = new MainWindow(720, 480, team1);
-		MainWindow team2Window = new MainWindow(720, 480, team2);
+		MainWindow team1Window = new MainWindow(720, 480, team1, server);
+		MainWindow team2Window = new MainWindow(720, 480, team2, server);
 		
 	}
 		
