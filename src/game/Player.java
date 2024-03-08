@@ -3,12 +3,7 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.Socket;
 
 import javax.imageio.ImageIO;
@@ -91,14 +86,16 @@ public class Player {
 	
 	public void loadPlayerImage() {
 		// laedt die richtigen Bilder;
-		String defaultPath = "images/" + character.toString() + "/" + character.toString() + " ";
+		String defaultPath = "res/images/" + character.toString() + "/" + character.toString() + " ";
 		try {
 			//right1 = ImageIO.read(getClass().getResourceAsStream("/game/Drache rechts 1.png"));
-			right1 = ImageIO.read(getClass().getClassLoader().getResource(defaultPath + "rechts 1.png"));
-			right2 = ImageIO.read(getClass().getClassLoader().getResource(defaultPath + "rechts 2.png"));
-			left1 = ImageIO.read(getClass().getClassLoader().getResource(defaultPath + "links 1.png"));
-			left2 = ImageIO.read(getClass().getClassLoader().getResource(defaultPath + "links 2.png"));
-			front = ImageIO.read(getClass().getClassLoader().getResource(defaultPath + "vorne.png"));
+			System.out.println(defaultPath + "rechts 1.png");
+			right1 = ImageIO.read(new File(defaultPath + "rechts 1.png"));
+			//right1 = ImageIO.read(getClass().getClassLoader().getResource(defaultPath + "rechts 1.png"));
+			right2 = ImageIO.read(new File(defaultPath + "rechts 2.png"));
+			left1 = ImageIO.read(new File(defaultPath + "links 1.png"));
+			left2 = ImageIO.read(new File(defaultPath + "links 2.png"));
+			front = ImageIO.read(new File(defaultPath + "vorne.png"));
 		} catch (IOException e) {
 			System.out.println("Fehler beim Laden der Bilder!");
 		}

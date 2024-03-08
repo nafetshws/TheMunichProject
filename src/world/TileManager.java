@@ -2,10 +2,7 @@ package world;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
@@ -39,7 +36,7 @@ public class TileManager {
 	
 	public void loadMap() {
 		
-		System.out.println("Lädt Map...Dies kann einen Moment dauern.");
+		System.out.println("Lï¿½dt Map...Dies kann einen Moment dauern.");
 
 		try {
 			
@@ -47,8 +44,8 @@ public class TileManager {
 				Tile tile = new Tile();
 				tile.setCollision(true);
 				
-				String path = "tilesBackup/invisible.png";
-				BufferedImage img = ImageIO.read(getClass().getClassLoader().getResource(path));
+				String path = "res/tilesBackup/invisible.png";
+				BufferedImage img = ImageIO.read(new File(path));
 				
 				tile.setImage(img);
 				
@@ -60,8 +57,8 @@ public class TileManager {
 				Tile tile = new Tile();
 				tile.setCollision(true);
 				
-				String path = "tilesBackup/invisible.png";
-				BufferedImage img = ImageIO.read(getClass().getClassLoader().getResource(path));
+				String path = "res/tilesBackup/invisible.png";
+				BufferedImage img = ImageIO.read(new File(path));
 				
 				tile.setImage(img);
 				
@@ -71,8 +68,8 @@ public class TileManager {
 			
 			for(int row = 1; row <= map.length - 2; row++) {
 				for(int col = 1; col <= (map[row].length)-2; col++) {
-					String path = "tiles/row-" + row + "-column-" + col + ".png";
-					BufferedImage img = ImageIO.read(getClass().getClassLoader().getResource(path));
+					String path = "res/tiles/row-" + row + "-column-" + col + ".png";
+					BufferedImage img = ImageIO.read(new File(path));
 					
 					Tile tile = new Tile();
 					tile.setImage(img);
@@ -107,7 +104,7 @@ public class TileManager {
 		try {
 			
 			tile[index] = new Tile(tileName);
-			BufferedImage image = ImageIO.read(getClass().getClassLoader().getResource("tilesBackup/" + tileName + ".png"));
+			BufferedImage image = ImageIO.read(new File("res/tilesBackup/" + tileName + ".png"));
 			tile[index].setImage(image);
 			tile[index].setCollision(collision);
 			

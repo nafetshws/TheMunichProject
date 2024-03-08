@@ -2,6 +2,7 @@ package items;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 import javax.imageio.ImageIO;
 
@@ -21,7 +22,7 @@ public class Item {
 	
 	public void loadImage() {
 		try {
-			image = ImageIO.read(getClass().getClassLoader().getResource("items/" + name + ".png"));
+			image = ImageIO.read(new File("res/items/" + name + ".png"));
 		} catch(Exception e) {
 			System.out.println("Fehler beim laden des Bildes");
 			e.printStackTrace();

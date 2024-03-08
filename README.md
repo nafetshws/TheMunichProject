@@ -1,9 +1,11 @@
 # TheMunichProject
+Ein einfaches Multiplayer Spiel, in dem zwei Teams gegeneinander antreten, um eine Flagge zu erobern. Das Spiel wird über 2 Geräte, die sich im selben Netzwerk befinden, gespielt.
+![Gameplay](Gameplay.png)
 
 ### Wie startet man das Spiel
 Um das Spiel zu starten muss man "src/game/Main.java" ausführen.
 
-#### Grundidee
+### Grundidee
 
 **Abgewandeltes Jump & Run in 2D**
 * 2 Teams mit jeweils 2 Spielern
